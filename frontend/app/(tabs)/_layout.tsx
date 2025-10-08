@@ -2,7 +2,7 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 
 import { HapticTab } from '@/components/haptic-tab';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Foundation, Feather } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
 
 export default function TabLayout() {
@@ -29,7 +29,7 @@ export default function TabLayout() {
         options={{
           title: 'Shop',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="cart" size={28} color={color} />
+            <Foundation name="shopping-cart" size={28} color={color} />
           ),
         }}
       />
@@ -38,7 +38,7 @@ export default function TabLayout() {
         options={{
           title: 'Profile',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="person" size={28} color={color} />
+            <Feather name="user" size={28} color={color} />
           ),
         }}
       />
