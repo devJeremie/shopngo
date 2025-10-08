@@ -37,16 +37,28 @@ export default function TabLayout() {
           ),
         }}
       />
-       <Tabs.Screen
+      <Tabs.Screen
         name="Profile"
         options={{
           title: 'Profile',
           tabBarIcon: ({ color }) => (
             <Feather name="user" size={28} color={color} />
           ),
-        }}
+        }}      
       />
-      
+      <Tabs.Screen
+        name="search"
+        options={{ href: null }}
+      />
+      <Tabs.Screen
+        name="favorites"
+        options={{ href: null }}
+      />
+      <Tabs.Screen
+        name="cart"
+        options={{ href: null }}
+      />
+
     </Tabs>
   );
 }

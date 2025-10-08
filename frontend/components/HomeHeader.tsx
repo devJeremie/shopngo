@@ -6,7 +6,7 @@ import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Logo from './Logo'
 import { AppColors } from '@/constants/theme'
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 
 const HomeHeader = () => {
@@ -18,7 +18,7 @@ const HomeHeader = () => {
             <View style={styles.iconContainer}>
                 <TouchableOpacity
                     style={styles.searchButton}
-                    onPress={() => router.push('/search')}
+                    onPress={() => router.push('/(tabs)/search')}
                 >
                     <AntDesign 
                         name="search"
@@ -26,6 +26,33 @@ const HomeHeader = () => {
                         color={AppColors.primary[700]} 
                     />
                 </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.searchButton}
+                    onPress={() => router.push('/(tabs)/favorites')}
+                >
+                    <MaterialCommunityIcons 
+                        name="heart-outline"
+                        size={20} 
+                        color={AppColors.primary[700]} 
+                    />
+                    <View style={styles.itemsView}>
+                        <Text style={styles.itemsText}>0</Text>
+                    </View>
+                </TouchableOpacity>
+                 <TouchableOpacity
+                    style={styles.searchButton}
+                    onPress={() => router.push('/(tabs)/cart')}
+                >
+                    <MaterialCommunityIcons 
+                        name="cart-outline"
+                        size={20} 
+                        color={AppColors.primary[700]} 
+                    />
+                    <View style={styles.itemsView}>
+                        <Text style={styles.itemsText}>0</Text>
+                    </View>
+                </TouchableOpacity>
+
             </View>
         </View>
     </SafeAreaView>
@@ -67,6 +94,21 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     itemsView: {
-
-    }
+        position: 'absolute',
+        top: -5,
+        right: -5,
+        borderRadius: 50,
+        width: 15,
+        height: 15,
+        backgroundColor: AppColors.background.primary,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: AppColors.primary[500],
+    }, 
+    itemsText: {
+        fontSize: 10,
+        color: AppColors.accent[500],
+        fontWeight: 800,
+    },
 })

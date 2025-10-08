@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const favorites = () => {
+const FavoritesScreen = () => {
   return (
     <View>
-      <Text>favorites</Text>
+      <Text>FavoritesScreen</Text>
     </View>
   )
 }
 
-export default favorites
+export default FavoritesScreen
 
 const styles = StyleSheet.create({})
