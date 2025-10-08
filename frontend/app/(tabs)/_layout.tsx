@@ -3,15 +3,19 @@ import React from 'react';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { Ionicons, Foundation, Feather } from '@expo/vector-icons';
+import { AppColors } from '@/constants/theme';
 import { Colors } from '@/constants/theme';
 
+import { useColorScheme } from 'react-native';
+
 export default function TabLayout() {
+  const colorSheme = useColorScheme();
 
 
   return (
     <Tabs
       screenOptions={{
-
+        tabBarActiveTintColor: Colors[colorSheme ?? 'light'].tint,
         headerShown: false,
         tabBarButton: HapticTab,
       }}>
