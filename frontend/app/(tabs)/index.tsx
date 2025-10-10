@@ -6,6 +6,7 @@ import { useProductStore } from '@/store/productStore';
 import { 
   View, StyleSheet, 
 } from 'react-native';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
@@ -33,6 +34,11 @@ export default function HomeScreen() {
     }
  }, [products]);
 
+ if(!loading) {
+  return(
+    <LoadingSpinner fullScreen />
+  )
+ }
   return (
     <View style={styles.wrapper}>
       <HomeHeader />
