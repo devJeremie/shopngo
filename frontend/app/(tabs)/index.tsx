@@ -13,8 +13,10 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Wrapper from '@/components/Wrapper';
 import { AntDesign } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
+  const router = useRouter();
   // State local pour stocker les "produits en vedette"
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   // Extraction des données et méthodes depuis le store Zustand
@@ -38,6 +40,15 @@ export default function HomeScreen() {
       setFeaturedProducts(reverseProducts as Product[]);
     }
  }, [products]);
+
+const navigateToCategory = (category: string) => {
+  router.push({
+    pathname: '/(tabs)/shop',
+    params: { 
+      category:category 
+    },
+  });
+ }
 
  if(loading) {
   return(
