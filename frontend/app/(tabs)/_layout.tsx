@@ -13,6 +13,7 @@ export default function TabLayout() {
 
 
   return (
+    // <Tabs />
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorSheme ?? 'light'].tint,
@@ -29,7 +30,7 @@ export default function TabLayout() {
         }}
       />
        <Tabs.Screen
-        name="Shop"
+        name="shop"
         options={{
           title: 'Shop',
           tabBarIcon: ({ color }) => (
@@ -38,7 +39,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="Profile"
+        name="profile"
         options={{
           title: 'Profile',
           tabBarIcon: ({ color }) => (

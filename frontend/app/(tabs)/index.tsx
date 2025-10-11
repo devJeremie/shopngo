@@ -5,9 +5,14 @@ import { Product } from '@/type';
 import { useProductStore } from '@/store/productStore';
 import { 
   View, StyleSheet, 
+  Text,
+  ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Wrapper from '@/components/Wrapper';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function HomeScreen() {
   // State local pour stocker les "produits en vedette"
@@ -22,7 +27,7 @@ export default function HomeScreen() {
   useEffect(() => {
     fetchProducts();
     fetchCategories();
-  }, []);
+  }, []); //[products] = boucle infini attention
   // Deuxième effet : sélection de produits "en vedette" quand products change
   useEffect(() => {
     // Si la liste des produits n'est pas vide
@@ -34,14 +39,61 @@ export default function HomeScreen() {
     }
  }, [products]);
 
- if(!loading) {
+ if(loading) {
   return(
-    <LoadingSpinner fullScreen />
+     <SafeAreaView style={styles.container}>
+      <View style={styles.errorContainer}>
+        <LoadingSpinner fullScreen />
+      </View>
+    </SafeAreaView>
+     
+  );
+ }
+ if (error) {
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>Error: {error}</Text>
+      </View>
+    </SafeAreaView>
   )
  }
   return (
     <View style={styles.wrapper}>
       <HomeHeader />
+      <View style={styles.contentContainer}>
+        <ScrollView 
+          showsVerticalScrollIndicator={false} 
+          contentContainerStyle={styles.scrollContainerView}
+        >
+          <View style={styles.categoriesSection}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Catégories</Text>
+            </View>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            >
+              {categories?.map((category) => (
+                <TouchableOpacity
+                  style= {styles.categoryButton}
+                  key={category}
+                  onPress={()=>navigateToCategory(category)}
+                >
+                  <AntDesign 
+                    name="tag"
+                    size={16}
+                    color={AppColors.primary[500]}
+                  />
+                  <Text style={styles.categoryText}>
+                    {category.charAt(0).toUpperCase() + 
+                  category.slice(1)}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </ScrollView>
+      </View>
     </View>
     
   );
@@ -49,7 +101,79 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   wrapper: {
+    // flex: 1,
+    backgroundColor: AppColors.background.primary,
+  },
+  container: {
     flex: 1,
     backgroundColor: AppColors.background.primary,
-  }
+  },
+  contentContainer: {
+    // paddingHorizontal: 20,
+    paddingLeft: 20,
+  },
+  scrollContainerView: {
+    paddingBottom: 300,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  categoriesSection: {
+    marginTop: 10,
+    marginBottom: 16,
+  },
+  categoryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: AppColors.background.secondary,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    marginLeft: 5,
+    minWidth: 100,
+  },
+  categoryText: {
+    marginLeft: 6,
+    fontFamily: 'Inter-Medium',
+    fontSize: 12,
+    color: AppColors.text.primary,
+    textTransform: 'capitalize',
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontFamily: 'Inter-Medium',
+    fontSize: 14,
+    color: AppColors.primary[500],
+  },
+  seeAllText: {
+    fontFamily: 'Inter-Medium',
+    fontSize: 14,
+    color: AppColors.primary[500],
+  },
+  errorText: {
+    fontFamily: 'Inter-Medium',
+    fontSize: 16,
+    color: AppColors.error,
+    textAlign: 'center',
+  },
+  productContainer: {
+    width: "48%",
+  },
+  productsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  newestSection: {
+    marginVertical: 16,
+    marginBottom: 32,
+  },
 });

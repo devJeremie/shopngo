@@ -13,10 +13,10 @@ interface LoadingSpinnerProps {
 }
 // Définition du composant fonctionnel
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
-    size = "small",
+    size = "large",
     color = AppColors.primary[500],
     text = "Loading...",
-    fullScreen= false,
+    fullScreen,
 }) => {
     // Si "fullScreen" est true, on retourne un spinner dans une View stylée
     if (fullScreen) {
