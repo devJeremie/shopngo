@@ -15,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Wrapper from '@/components/Wrapper';
 import { AntDesign } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import ProductCard from '@/components/ProductCard';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -119,8 +120,8 @@ const navigateToCategory = (category: string) => {
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.featuredProductsContainer}
               renderItem={({ item }) => (
-                <View>
-                  <Text>Products</Text>
+                <View style={styles.featuredProductContainer}>
+                  <ProductCard item={item} compact/>
                 </View>
               )}
             />
@@ -210,4 +211,14 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     marginBottom: 32,
   },
+  featuredProductsContainer: {
+
+  },
+  featuredProductContainer: {
+
+  },
+  featuredSection: {
+    marginVertical: 16,
+  },
+
 });
