@@ -8,6 +8,7 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -111,6 +112,18 @@ const navigateToCategory = (category: string) => {
                   <Text style={styles.seeAllText}>Voir tout</Text>
                 </TouchableOpacity>
             </View>
+            <FlatList 
+              data={featuredProducts}
+              keyExtractor={(item) => item.id.toString()}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.featuredProductsContainer}
+              renderItem={({ item }) => (
+                <View>
+                  <Text>Products</Text>
+                </View>
+              )}
+            />
           </View>
         </ScrollView>
       </View>
