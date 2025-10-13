@@ -103,6 +103,15 @@ const navigateToCategory = (category: string) => {
               ))}
             </ScrollView>
           </View>
+          <View>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Meilleurs Ventes</Text>
+                <TouchableOpacity>
+                  {/* onPress={navigateToAllProducts} dans le touchable opacity */}
+                  <Text style={styles.seeAllText}>Voir tout</Text>
+                </TouchableOpacity>
+            </View>
+          </View>
         </ScrollView>
       </View>
     </View>
@@ -158,6 +167,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
+    paddingRight: 20,
   },
   sectionTitle: {
     fontFamily: 'Inter-Medium',
