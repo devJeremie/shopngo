@@ -130,6 +130,19 @@ const navigateToCategory = (category: string) => {
           <View style={styles.newestSection}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Nouveautés</Text>
+              <TouchableOpacity>
+                <Text style={styles.seeAllText}>Voir Tout</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.productsGrid}>
+              {products?.map((product) => (
+                <View key={product.id} style={styles.productContainer}>
+                  <ProductCard 
+                    product={product}
+                    customStyle={{width: "100%"}}
+                  />
+                </View>
+              ))}
             </View>
           </View>
         </ScrollView>
@@ -212,6 +225,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    paddingRight: 20,
   },
   newestSection: {
     marginVertical: 16,

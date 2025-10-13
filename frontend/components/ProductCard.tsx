@@ -7,6 +7,7 @@ import {
 import React from 'react';
 import { AppColors } from '@/constants/theme';
 import { Product } from '@/type';
+import Button from './Button';
 
 interface ProductCardProps {
     product: Product;
@@ -42,6 +43,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             </Text>
             <View style={styles.footer}>
                 <Text style={styles.price}>€{price.toFixed(2)}</Text>
+                {!compact && <Button title='Ajouter au panier' size='small' variant='outline'/>}
             </View>
         </View>
     </TouchableOpacity>
