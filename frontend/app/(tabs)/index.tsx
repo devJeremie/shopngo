@@ -105,7 +105,7 @@ const navigateToCategory = (category: string) => {
               ))}
             </ScrollView>
           </View>
-          <View>
+          <View style={styles.featuredSection}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Meilleurs Ventes</Text>
                 <TouchableOpacity>
@@ -121,10 +121,16 @@ const navigateToCategory = (category: string) => {
               contentContainerStyle={styles.featuredProductsContainer}
               renderItem={({ item }) => (
                 <View style={styles.featuredProductContainer}>
-                  <ProductCard item={item} compact/>
+                  <ProductCard product={item} compact/>
                 </View>
               )}
             />
+          </View>
+          {/* Section des produits les plus récents */}
+          <View style={styles.newestSection}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Nouveautés</Text>
+            </View>
           </View>
         </ScrollView>
       </View>
@@ -210,6 +216,11 @@ const styles = StyleSheet.create({
   newestSection: {
     marginVertical: 16,
     marginBottom: 32,
+  },
+  productGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
   featuredProductsContainer: {
 

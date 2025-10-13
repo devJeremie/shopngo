@@ -31,6 +31,19 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 resizeMode='contain'
             />
         </View>
+        <View style={styles.content}>
+            <Text style={styles.category}>{category}</Text>
+            <Text 
+                style={styles.title}
+                numberOfLines={compact ? 1 :2}
+                ellipsizeMode='tail'
+            >
+                {title}
+            </Text>
+            <View style={styles.footer}>
+                <Text style={styles.price}>€{price.toFixed(2)}</Text>
+            </View>
+        </View>
     </TouchableOpacity>
   )
 }
@@ -50,12 +63,16 @@ const styles = StyleSheet.create({
         // alignItems: 'center',
     },
     title: {
-
+        fontSize: 14,
+        fontWeight: '500',
+        color: AppColors.text.primary,
+        marginBottom: 8,
     },
     category: {
         fontSize: 12,
         color: AppColors.text.tertiary,
         textTransform: 'capitalize',
+        marginBottom: 4,
     },
     content: {
         padding: 12,
@@ -81,6 +98,7 @@ const styles = StyleSheet.create({
     imageContainer: {
         position: 'relative',
         height: 150,
+        width: 100,
         backgroundColor: AppColors.background.primary,
         padding: 5,
     },
