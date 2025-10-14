@@ -1,16 +1,68 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { 
+    StyleSheet, Text,
+     TouchableOpacity, View,
+} from 'react-native'
 import React from 'react';
 import { AppColors } from '@/constants/theme';
-import { Feather } from '@expo/vector-icons';
+import { AntDesign, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
-const CommonHeader = () => {
+interface Props {
+    isFav?: boolean;
+    showCart?: boolean;
+    handleToggleFavorite?: () => void;
+}
+
+const CommonHeader = ({isFav,showCart,handleToggleFavorite}:Props) => {
+    const router = useRouter();
+    const handleGoBack = () => {
+        if (router.canGoBack()) {
+            router.back();
+        } else {
+            router.push('/');
+        }
+    };
   return (
     <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} >
+        <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
             <Feather 
-                name="arrow-left" size={24} 
+                name="arrow-left" size={20} 
                 color={AppColors.text.primary} />
         </TouchableOpacity>
+        <View style={styles.buttonView}>
+            <TouchableOpacity
+                style={[
+                    styles.favoriteButton,
+                    isFav && styles.activeFavoriteButton
+                ]}
+                onPress={handleToggleFavorite}
+            >
+                <AntDesign 
+                    name="heart" 
+                    size={20} 
+                    color={
+                        isFav ? AppColors.background.primary : AppColors.text.primary
+                    } 
+                    fill={isFav ? AppColors.background.primary : "transparent"}
+                />
+            </TouchableOpacity>
+            <TouchableOpacity
+                onPress={()=> router.push("/(tabs)/cart")}
+                style={[
+                    styles.favoriteButton,
+                    isFav && styles.activeFavoriteButton
+                ]}
+            >
+                <MaterialCommunityIcons 
+                    name="cart-outline" 
+                    size={24} 
+                    color={
+                        isFav ? AppColors.background.primary : AppColors.text.primary
+                    } 
+                    fill={isFav ? AppColors.background.primary : "transparent"}
+                />
+            </TouchableOpacity>
+        </View>
     </View>
   )
 }
@@ -45,4 +97,8 @@ const styles = StyleSheet.create({
     activeFavoriteButton: {
         backgroundColor: AppColors.error
     },
+    buttonView: {
+        flexDirection: 'row',
+        gap: 7,
+    }
 })
