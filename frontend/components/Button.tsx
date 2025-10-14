@@ -1,7 +1,8 @@
 import { 
     StyleProp, StyleSheet,
     Text, View,
-    TouchableOpacity, ViewStyle
+    TouchableOpacity, ViewStyle,
+    ActivityIndicator, TextStyle,
  } from 'react-native'
 import React from 'react';
 import { AppColors } from '@/constants/theme';
@@ -15,7 +16,7 @@ interface ButtonProps {
     fullWidth?: boolean;
     loading?: boolean;
     style?: StyleProp<ViewStyle>;
-    textStyle?: StyleProp<ViewStyle>;
+    textStyle?: StyleProp<TextStyle>;
 }
 
 const Button:React.FC<ButtonProps> = ({
@@ -44,9 +45,23 @@ const textStyles=[
 ];
 
   return (
-    <View>
-      <Text>Button</Text>
-    </View>
+    <TouchableOpacity 
+        style={buttonStyle} 
+        onPress={onPress} 
+        disabled={disabled || loading} 
+        activeOpacity={0.8}
+    >
+        {loading ? (
+            <ActivityIndicator 
+                color={
+                    variant === 'primary' 
+                    ? AppColors.background.primary 
+                    : AppColors.primary[500]}
+            />
+        ) : (
+            <Text style={textStyles}>{title}</Text>
+        )}
+    </TouchableOpacity>
   )
 }
 
@@ -85,10 +100,10 @@ const styles = StyleSheet.create({
     },
     //Styles du bouton
     primaryText:{
-        color: 'white'
+        color: AppColors.background.primary,
     },
     secondaryText:{
-        color: 'white'
+        color: AppColors.background.primary,
     },
     outlineText: {
         color: AppColors.primary[500],

@@ -59,6 +59,10 @@ export default function TabLayout() {
         name="cart"
         options={{ href: null }}
       />
+      <Tabs.Screen
+        name="product/[id]"
+        options={{ href: null }}
+      />
 
     </Tabs>
   );

@@ -2,12 +2,14 @@ import {
     StyleSheet, Text,
     View, StyleProp, 
     ViewStyle, Image,
-    TouchableOpacity, 
+    TouchableOpacity, Alert, 
     } from 'react-native';
 import React from 'react';
 import { AppColors } from '@/constants/theme';
 import { Product } from '@/type';
 import Button from './Button';
+import Toast from 'react-native-toast-message';
+import { useRouter } from 'expo-router';
 
 interface ProductCardProps {
     product: Product;
@@ -16,13 +18,37 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ 
-    product, compact=false, customStyle
+    product, 
+    compact=false, 
+    customStyle
 }) => {
     const { id, title, price, category, image } = product;
+
+    const router = useRouter();
+    const handleProductRoute = () => {
+        // Logique pour naviguer vers la page du produit
+        //on ecrit la route de cette manière car expo router n'accepte pas les types dynamiques
+        //juste les routes strictes / statiques
+        router.push(`/product/${id}` as any);
+    };
+
+    const handleAddToCart = () => {
+        // Logique pour ajouter le produit au panier
+        Toast.show({
+            type: 'success',
+            text1: `Produit ${title} ajouté au panier 👋`,
+            text2: "Voir le panier pour finaliser votre achat.",
+            visibilityTime: 2000,
+            // position: 'bottom',
+            
+        });
+        // Alert.alert(`Produit ${title} ajouté au panier`);
+    };
+
   return (
-    <TouchableOpacity style= {
-        [ styles.card, compact && styles.compactCard,
-        customStyle]}
+    <TouchableOpacity 
+        onPress={handleProductRoute}
+        style= {[ styles.card, compact && styles.compactCard,customStyle]}
         activeOpacity={0.8}
     >
         <View style={styles.imageContainer}>
@@ -42,8 +68,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 {title}
             </Text>
             <View style={styles.footer}>
-                <Text style={styles.price}>€{price.toFixed(2)}</Text>
-                {!compact && <Button title='Ajouter au panier' size='small' variant='outline'/>}
+                <Text style={[styles.price, !compact && { marginBottom: 6}]}>€{price.toFixed(2)}</Text>
+                {!compact && (
+                <Button 
+                    onPress={handleAddToCart}
+                    title='Ajouter au panier' 
+                    size='small' 
+                    variant='outline'/>
+                )}
             </View>
         </View>
     </TouchableOpacity>
