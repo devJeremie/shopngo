@@ -35,7 +35,14 @@ const Button:React.FC<ButtonProps> = ({
         fullWidth && styles.fullWidth,
         disabled && styles.disabled,
         style
-    ]
+    ];
+
+const textStyles=[
+    styles.text,
+    styles[`${variant}Text`],
+    textStyle
+];
+
   return (
     <View>
       <Text>Button</Text>
