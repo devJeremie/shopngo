@@ -4,6 +4,7 @@ import { AppColors } from '@/constants/theme';
 import { useLocalSearchParams } from 'expo-router';
 import CommonHeader from '@/components/CommonHeader';
 import { Product } from '@/type';
+import { getProduct } from '@/lib/api';
 
 const SingleProductScreen = () => {
   const {id} = useLocalSearchParams<{ id: string }>();
@@ -16,12 +17,20 @@ const SingleProductScreen = () => {
     const fetchProductData = async () => {
       setLoading(true);
       try {
-        
+        const data = await getProduct(Number(id));
+        setProduct(data);
       } catch (error) {
-        
+        setError('Failed to fetch product data');
+        console.log('Error fetching product data:', error);
+      } finally {
+        setLoading(false);
       }
+    };
+    if (id) {
+      fetchProductData();
     }
   }, [id]);  
+  console.log('Product data:', product);
 
   return (
     <View style={styles.headerContainerStyle}>
