@@ -60,4 +60,13 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
         // Désactive la détection de session à partir de l'URL, inutile sur mobile
         detectSessionInUrl: false, // Set to false for React Native
     },
+    // Configuration du module Realtime de Supabase
+    // En mettant transport à undefined, on désactive la spécification explicite
+    // du type de transport utilisé (WebSocket ou autre).
+    // Cela permet au SDK Supabase de choisir automatiquement le transport adapté
+    // à la plateforme, ce qui évite des erreurs sur React Native ou Expo
+    // liées à un transport non supporté ou mal configuré.
+    realtime: {
+        transport: undefined,
+    },
 });
