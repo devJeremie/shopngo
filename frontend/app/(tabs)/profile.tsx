@@ -28,10 +28,16 @@ const ProfileScreen = () => {
           <Text style={styles.title}>Bienvenue !</Text>
           <Text style={styles.message}>Svp connectez-vous ou inscrivez vous pour accéder à votre profil</Text>
           <View style={styles.buttonContainer}>
-            <Button title="Connectez-vous !" fullWidth 
+            <Button title="Connexion" fullWidth 
                     style={styles.loginButton}
                     textStyle={styles.buttonText}
-                    onPress={() =>router.push("/")}
+                    onPress={() => router.push("./login.tsx")} //normalement ("/(tabs)/login")
+            />
+            <Button title="Inscription" fullWidth 
+                    variant='outline'
+                    style={styles.signupButton}
+                    textStyle={styles.signupButtonText}
+                    onPress={() => router.push("./signup.tsx")} //normalement ("/(tabs)/signup")
             />
           </View>
         </View>
