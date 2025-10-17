@@ -13,16 +13,35 @@ const TextInput = () => {
 export default TextInput
 
 const styles = StyleSheet.create({
-    multiligneInput: {
-        minHeight: 100,
-        textAlignVertical: "top"
-    },
-    inputError:{
-        borderColor: AppColors.error
-    },
-    errorText: {
-        color: AppColors.error,
-        fontSize: 12,
-        marginTop: 4,
-    }
+  container: {
+    marginBottom: 16,
+    width: "100%"
+  },
+  label: {
+    marginBottom: 8,
+    fontSize: 14,
+    fontWeight: "500",
+    color: AppColors.text.primary,
+  },
+  input: {
+    backgroundColor: AppColors.background.secondary,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: AppColors.gray[300],
+    color: AppColors.text.primary,
+  },
+  multiligneInput: {
+    minHeight: 100,
+    textAlignVertical: "top"
+  },
+  inputError:{
+    borderColor: AppColors.error
+  },
+  errorText: {
+    color: AppColors.error,
+    fontSize: 12,
+    marginTop: 4,
+  }
 })

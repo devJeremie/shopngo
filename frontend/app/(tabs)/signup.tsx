@@ -1,12 +1,12 @@
 import { 
   KeyboardAvoidingView, StyleSheet,
-  Text, View,
+  Text, View, ScrollView,
  } from 'react-native'
 import React, { useState } from 'react';
 import { Foundation } from '@expo/vector-icons';
 import { AppColors } from '@/constants/theme';
 import Wrapper from '@/components/Wrapper';
-import { ScrollView } from 'react-native-reanimated/lib/typescript/Animated';
+// import { ScrollView } from 'react-native-reanimated/lib/typescript/Animated';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/store/authStore';
 import TextInput from '@/components/TextInput';

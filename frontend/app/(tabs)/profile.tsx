@@ -31,13 +31,13 @@ const ProfileScreen = () => {
             <Button title="Connexion" fullWidth 
                     style={styles.loginButton}
                     textStyle={styles.buttonText}
-                    onPress={() => router.push("./login.tsx")} //normalement ("/(tabs)/login")
+                    onPress={() => router.push("/(tabs)/login")} //normalement ("/(tabs)/login")
             />
             <Button title="Inscription" fullWidth 
                     variant='outline'
                     style={styles.signupButton}
                     textStyle={styles.signupButtonText}
-                    onPress={() => router.push("./signup.tsx")} //normalement ("/(tabs)/signup")
+                    onPress={() => router.push("/(tabs)/signup")} //normalement ("/(tabs)/signup")
             />
           </View>
         </View>
