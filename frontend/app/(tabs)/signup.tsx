@@ -10,6 +10,7 @@ import Wrapper from '@/components/Wrapper';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/store/authStore';
 import TextInput from '@/components/TextInput';
+import Button from '@/components/Button';
 
 const SignUpScreen = () => {
   const [email, setEmail] = useState("");
@@ -21,6 +22,11 @@ const SignUpScreen = () => {
 
   const router = useRouter();
   const { signup, isLoading, error } = useAuthStore();
+
+  const handleSignUp = async () => {
+    console.log(email, password, confirmPassword);
+  }
+
   return (
     <Wrapper>
       <KeyboardAvoidingView
@@ -38,9 +44,41 @@ const SignUpScreen = () => {
             <Text style={styles.title}>Shopngo</Text>
             <Text style={styles.subtitle}>Créez un nouveau compte</Text>
           </View>
-          <View>
+          <View style= {styles.form}>
             {error && <Text style={styles.errorText}>{error}</Text>}
-            <TextInput />
+            <TextInput 
+              label="Email" 
+              value={email} 
+              onChangeText={setEmail}
+              placeholder='Entrez votre Email'
+              keyboardType='email-address' 
+              autoCapitalize='none'
+              autoCorrect= {false}
+              error={emailError}
+            />
+            <TextInput 
+              label="Mot de passe" 
+              value={password} 
+              onChangeText={setPassword}
+              placeholder='Entrez votre mot de passe'
+              error={passwordError}
+              secureTextEntry
+            />
+             <TextInput 
+              label="Confirmer le mot de passe" 
+              value={confirmPassword} 
+              onChangeText={setConfirmPassword}
+              placeholder='Entrez votre mot de passe'
+              error={confirmError}
+              secureTextEntry
+            />
+            <Button 
+              onPress={handleSignUp}
+              title="Inscription"
+              fullWidth
+              loading={isLoading}
+              style={styles.button}
+            />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
