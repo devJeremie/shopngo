@@ -9,6 +9,7 @@ import Wrapper from '@/components/Wrapper';
 import { ScrollView } from 'react-native-reanimated/lib/typescript/Animated';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/store/authStore';
+import TextInput from '@/components/TextInput';
 
 const SignUpScreen = () => {
   const [email, setEmail] = useState("");
@@ -38,7 +39,8 @@ const SignUpScreen = () => {
             <Text style={styles.subtitle}>Créez un nouveau compte</Text>
           </View>
           <View>
-
+            {error && <Text style={styles.errorText}>{error}</Text>}
+            <TextInput />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
