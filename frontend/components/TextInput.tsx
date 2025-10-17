@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { AppColors } from '@/constants/theme';
 
 const TextInput = () => {
   return (
