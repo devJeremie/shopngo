@@ -23,9 +23,49 @@ const SignUpScreen = () => {
   const router = useRouter();
   const { signup, isLoading, error } = useAuthStore();
 
+  const validateForm = () => {
+    let isValid = true;
+    //validation email
+    if(!email.trim()) {
+      setEmailError('Email obligatoire');
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      setEmailError('Adresse email invalide');
+      isValid = false;
+    } else {
+      setEmailError("");
+    }
+    //validation mot de passe
+    if(!password) {
+      setPasswordError('Mot de passe obligatoire');
+      isValid = false;
+    } else if(password.length < 6) {
+      setPasswordError('Le mot de passe doit contenir au moins 6 caractères');
+      isValid = false;
+    } else {
+      setPasswordError("");
+    }
+
+    //confirmation validation du mot de passe 
+    if(password !== confirmPassword) {
+      setConfirmError("Les mots de passe ne correspondent pas");
+      isValid = false;
+    } else {
+      setConfirmError("");
+    }
+    return isValid;
+  };
+
   const handleSignUp = async () => {
-    console.log(email, password, confirmPassword);
-  }
+    // console.log(email, password, confirmPassword);
+    if (validateForm()) {
+      await signup(email, password);
+      router.push("/(tabs)/login")
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+    }
+  };
 
   return (
     <Wrapper>
