@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '@/store/authStore';
@@ -6,10 +6,11 @@ import { useRouter } from "expo-router";
 import Wrapper from '@/components/Wrapper'; 
 import { AppColors } from '@/constants/theme';
 import Button from '@/components/Button';
-import { Feather, FontAwesome, FontAwesome5, Foundation } from '@expo/vector-icons';
+import { Feather, FontAwesome, FontAwesome5, Foundation, MaterialIcons } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
 
 const ProfileScreen = () => {
-  const { user, logout, checkSession } = useAuthStore();
+  const { user, logout, checkSession, isLoading } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -91,6 +92,32 @@ const ProfileScreen = () => {
     }
   ];
 
+  const handleLogout = async () => {
+    Alert.alert("Déconnexion", "Etes vous sur de vouloir vous deconnecter ?", [
+      {
+        text: "Annuler",
+        style: "cancel",
+      },
+      {
+        text: "Deconnexion",
+        onPress: async() => {
+          try {
+            await logout()
+            Toast.show({
+              type: "success",
+              text1: "Déconnexion réussi",
+              text2: "Vous avez été déconnecté",
+              visibilityTime: 2000,
+            });
+          } catch (error) {
+            console.error("Profil: Erreur pendant la déconnexion:", error);
+            Alert.alert("Erreur de déconnexion", "Une erreur est survenue");
+          }
+        },
+      },
+    ]);
+  }
+
   return (
     <Wrapper>
       {user ? (
@@ -113,15 +140,34 @@ const ProfileScreen = () => {
               </TouchableOpacity>
             </View>
           </View>
-          <View>
+          <View style={styles.menuContainer}>
             {menuItems?.map((item) => (
-              <TouchableOpacity key={item?.id}>
-                <View>
+              <TouchableOpacity 
+                key={item?.id} 
+                style={styles.menuItem}
+                onPress={item?.onPress}
+              >
+                <View style={styles.menuItemLeft}>
                   {item?.icon}
-                  <Text>{item?.title}</Text>
+                  <Text style={styles.menuItemTitle}>{item?.title}</Text>
                 </View>
+                <MaterialIcons 
+                  name="chevron-right"
+                  size={24}
+                  color={AppColors.gray[400]}
+                />
               </TouchableOpacity>
             ))}
+          </View>
+          <View style={styles.logoutContainer}>
+            <Button 
+              title="Déconnexion"
+              onPress={handleLogout}
+              variant='outline'
+              fullWidth style={styles.logoutButton}
+              textStyle={styles.logoutButtonText}
+              disabled={isLoading}
+            />
           </View>
         </View>
       ) : (
