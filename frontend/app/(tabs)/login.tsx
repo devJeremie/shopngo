@@ -69,7 +69,7 @@ const LoginScreen = () => {
                 color={AppColors.primary[500]}
               />
             </View>
-            <Text style={styles.title}>Shopn'go</Text>
+            <Text style={styles.title}>ShopNgo</Text>
             <Text style={styles.subtitle}>Connectez-vous à votre compte</Text>
           </View>
              <View style= {styles.form}>
