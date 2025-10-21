@@ -47,7 +47,7 @@ const navigateToCategory = (category: string) => {
   router.push({
     pathname: '/(tabs)/shop',
     params: { 
-      category:category 
+      category 
     },
   });
  }

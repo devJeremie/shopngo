@@ -4,12 +4,19 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { AppColors } from '@/constants/theme';
 import Wrapper from '@/components/Wrapper';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useProductStore } from '@/store/productStore';
 import { API_URL } from '@/config';
 
 
+
 const ShopScreen = () => {
+  const {q:searchParam,category:categoryParam} = useLocalSearchParams<{
+    q?:string; 
+    category?:string
+  }>();
+  console.log(categoryParam);
+
   const {
     filteredProducts, 
     selectedCategory, loading, 
@@ -25,6 +32,9 @@ const ShopScreen = () => {
   useEffect(() => {
     fetchCategories();
     fetchProducts();
+    if (categoryParam) {
+      setCategory(categoryParam);
+    }
   }, [])
   
     const router = useRouter();
@@ -74,6 +84,7 @@ const ShopScreen = () => {
               styles.categoryButton,
               selectedCategory === null && styles.selectedCategory
             ]}
+            onPress={() => setCategory(null)}
           >
             <Text 
               style={[
@@ -84,6 +95,25 @@ const ShopScreen = () => {
             Tous
             </Text>
           </TouchableOpacity>
+          {categories?.map((category) =>(
+            <TouchableOpacity 
+              onPress={() => setCategory(category)}
+              key={category}
+              style={[
+                styles.categoryButton,
+                selectedCategory === category && styles.selectedCategory,
+              ]}
+            >
+            <Text 
+              style={[
+                styles.categoryText,
+                selectedCategory === category && styles.selectedCategoryText
+              ]}
+            >
+              {category.charAt(0).toUpperCase() + category.slice(1)}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </ScrollView>
       </View>
     );
@@ -92,6 +122,15 @@ const ShopScreen = () => {
   return (
    <Wrapper>
       {renderHeader()}
+      {filteredProducts?.length === 0 ? (
+        <View>
+          <Text>Pas de produits</Text>
+        </View>
+      ) : ( 
+        <View>
+          <Text>Produits</Text>
+        </View>
+      )}
    </Wrapper>
   )
 }
