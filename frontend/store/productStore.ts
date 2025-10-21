@@ -1,5 +1,5 @@
 //Import des fonctions d'API et des types nécessaires
-import { getCategories, getProducts } from '@/lib/api';
+import { getCategories, getProducts, getProductsByCategory } from '@/lib/api';
 //Import du type Product
 import { Product } from '@/type';
 //Import des bibliothèques nécessaires pour la gestion de l'état avec persistance
@@ -15,12 +15,17 @@ interface ProductsState {
     filteredProducts: Product[];                    //Liste des produits filtrés   
     categories: string[];                           //Liste des catégories de produits disponibles
     loading: boolean;                               //Indicateur de chargement
-    error: string | null;                           //Message d'erreur, s'il y en a
+    error: string | null;   
+    selectedCategory: string | null;                        //Message d'erreur, s'il y en a
 //Action to fetch products
     //Méthode pour récupérer les produoits depuis l'API
     fetchProducts: () => Promise<void>;
     //Méthode pour récupérer les catégories depuis l'API
     fetchCategories: () => Promise<void>;
+    setCategory: (category: string | null) => Promise<void>;
+    searchProducts: (query: string) => void;
+    sortProducts: (sortBy: "price-asc" | "price-desc" | "rating") => void;
+    searchProductsRealTime: (query: string) => Promise<void>;
 }
 //Création du store avec Zustand et persistance avec AsyncStorage
 export const useProductStore = create<ProductsState>()(
@@ -30,6 +35,7 @@ export const useProductStore = create<ProductsState>()(
         //Initialisation des valeurs du state
         products: [],
         filteredProducts: [],
+        selectedCategory: null,
         categories: [],
         loading: false,
         error: null,
@@ -61,6 +67,66 @@ export const useProductStore = create<ProductsState>()(
                 set({ error: error.message, loading: false });
             }
         },
+        setCategory: async (category: string | null) => {
+            try {
+                set({ selectedCategory: category, loading: true, error: null});
+
+                if ( category) {
+                    const products = await getProductsByCategory(category);
+                    set ({ filteredProducts: products, loading: false});
+                } else {
+                    set({ filteredProducts: get().products, loading: false});
+                }
+            } catch (error: any) {
+               set({ error: error.message, loading: false}); 
+            }
+        },
+        searchProducts: (query: string) => {
+            const searchTerm = query.toLowerCase().trim();
+            const { products, selectedCategory } = get();
+
+            let filtered = products;
+
+            if (selectedCategory) {
+                filtered = products.filter(
+                    (product) => product.category === selectedCategory
+                );
+            }
+
+            if (searchTerm) {
+                filtered = filtered.filter(
+                    (product) => 
+                        product.title.toLowerCase().includes(searchTerm) ||
+                        propuct.description.toLowerCase().includes(searchTerm) ||
+                        product.category.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            set({ filteredProducts: filtered });
+        },
+
+        sortProducts: (sortBy: "price-asc" | "price-desc" | "rating") => {
+            const { filteredProducts } get();
+            let sorted = [...filteredProducts];
+
+            switch (sortBy) {
+                case "price-asc":
+                    sorted.sort((a, b) => a.price - b.price);
+                break;
+                case "price-desc":
+                    sorted.sort((a, b) => b.price - a.price);
+                break;
+                case "rating":
+                    sorted.sort((a, b) => b.rating.rate - a.rating.rate);
+                break;
+                default;
+                break;
+            }
+            set({ filteredProducts: sorted});
+        },
+        searchProductsRealTime: async (query: string) => {
+            
+        }
     }), 
     //Options du middleware de persistance
     {

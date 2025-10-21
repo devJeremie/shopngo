@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { AppColors } from '@/constants/theme';
@@ -9,6 +9,10 @@ import { useRouter } from 'expo-router';
 
 const ShopScreen = () => {
   const [products, setProducts] = useState([]);
+  const [showShortModal, setShowShortModal] = useState(false);
+  const [activeSortOption, setActiveSortOption] = useState<string | null>(null);
+  const [isFilterActive, setIsFilterActive] = useState(false);
+
   const router = useRouter();
   useEffect(() => {
     const getProducts = async() =>{
@@ -29,10 +33,11 @@ const ShopScreen = () => {
     return (
       <View style={styles.header}>
         <Text style={styles.title}>Tous les produits</Text>
-        <TouchableOpacity 
-          style={styles.searchRow}
-          onPress={() => router.push("/(tabs)/search")}
-        >
+        <View style={{flexDirection: 'row', width: '100%'}}>
+          <TouchableOpacity 
+            style={styles.searchRow}
+            onPress={() => router.push("/(tabs)/search")}
+          >
           <View style={styles.searchContainer}>
             <View style={styles.searchInput}>
               <Text>Cherchez un produit...</Text>
@@ -40,7 +45,6 @@ const ShopScreen = () => {
           </View>
           <View 
             style={styles.searchButton}
-            
           >
             <Ionicons 
               name="search"
@@ -48,9 +52,29 @@ const ShopScreen = () => {
               color="white"
             />
           </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+          <TouchableOpacity style={[
+            styles.sortOption,
+            isFilterActive && styles.activeSortButton, 
+          ]}>
+            <AntDesign 
+              name='filter'
+              size={20}
+              color={AppColors.text.primary}
+            />
+          </TouchableOpacity>
+        </View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoriesContainer}
+        >
+          <TouchableOpacity style={[styles.categoryButton, styles.selectedCategory]}>
+            <Text>Tous</Text>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
-    )
+    );
   };
 
   return (
@@ -81,6 +105,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
+    flex: 1,
+    marginRight: 5,
   },
   searchContainer: {
     flex: 1,
@@ -181,9 +207,14 @@ const styles = StyleSheet.create({
     color: AppColors.text.primary,
   },
   sortOption: {
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: AppColors.gray[200],
+    // paddingVertical: 16,
+    borderWidth: 1,
+    borderColor: AppColors.gray[200],
+    width: 45,
+    height: 45,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   activeSortOption: {
     backgroundColor: AppColors.background.secondary
