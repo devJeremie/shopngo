@@ -43,9 +43,7 @@ const getCategories = async (): Promise<string[]> => {
         throw error;
     }
 };
-const getProductsByCategory = async (
-    category: string
-): Promise<Product[]> => {
+const getProductsByCategory = async ( category: string ): Promise<Product[]> => {
     try {
         const response = await fetch(`${API_URL}/products/category/${category}`);
         if (!response.ok) {

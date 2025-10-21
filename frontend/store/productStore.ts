@@ -1,5 +1,5 @@
 //Import des fonctions d'API et des types nécessaires
-import { getCategories, getProducts, getProductsByCategory } from '@/lib/api';
+import { getCategories, getProducts, getProductsByCategory, searchProductsApi } from '@/lib/api';
 //Import du type Product
 import { Product } from '@/type';
 //Import des bibliothèques nécessaires pour la gestion de l'état avec persistance
@@ -28,10 +28,8 @@ interface ProductsState {
     searchProductsRealTime: (query: string) => Promise<void>;
 }
 //Création du store avec Zustand et persistance avec AsyncStorage
-export const useProductStore = create<ProductsState>()(
-    //Middleware de persistance
-    persist(
-        (set, get)=>({                              //set=modifer le state, get=accéder au state
+export const useProductStore = create<ProductsState>((set, get) =>
+    ({                              //set=modifer le state, get=accéder au state
         //Initialisation des valeurs du state
         products: [],
         filteredProducts: [],
@@ -97,7 +95,7 @@ export const useProductStore = create<ProductsState>()(
                 filtered = filtered.filter(
                     (product) => 
                         product.title.toLowerCase().includes(searchTerm) ||
-                        propuct.description.toLowerCase().includes(searchTerm) ||
+                        product.description.toLowerCase().includes(searchTerm) ||
                         product.category.toLowerCase().includes(searchTerm)
                 );
             }
@@ -106,7 +104,7 @@ export const useProductStore = create<ProductsState>()(
         },
 
         sortProducts: (sortBy: "price-asc" | "price-desc" | "rating") => {
-            const { filteredProducts } get();
+            const { filteredProducts }= get();
             let sorted = [...filteredProducts];
 
             switch (sortBy) {
@@ -119,18 +117,24 @@ export const useProductStore = create<ProductsState>()(
                 case "rating":
                     sorted.sort((a, b) => b.rating.rate - a.rating.rate);
                 break;
-                default;
+                default:
                 break;
             }
             set({ filteredProducts: sorted});
         },
         searchProductsRealTime: async (query: string) => {
-            
-        }
-    }), 
-    //Options du middleware de persistance
-    {
-    name: 'product-storage',
-    storage: createJSONStorage(() => AsyncStorage),
-    })
-);
+            try {
+                set({ loading: true, error: null});
+
+                if (!query.trim()) {
+                    set ({ filteredProducts: get().products, loading: false });
+                    return;
+                }
+
+                const searchResults = await searchProductsApi(query);
+                set({ filteredProducts: searchResults, loading: false});
+            } catch (error: any) {
+                set({ error: error.message, loading: false});
+            }
+        },
+    }));
