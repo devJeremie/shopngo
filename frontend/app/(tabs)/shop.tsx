@@ -74,7 +74,7 @@ const ShopScreen = () => {
           <TouchableOpacity 
             onPress={ () => setShowShortModal(true)}
             style={[
-              styles.sortOption,
+              styles.sortOptionView,
               isFilterActive && styles.activeSortButton, 
             ]}
           >
@@ -139,6 +139,19 @@ const ShopScreen = () => {
       </Wrapper>
     );
   }
+  //sortBY rappelez vous le productStore price-asc price desc rating on a fait le switch case
+  const handleSort= (sortBy: "price-asc" | "price-desc" | "rating") => {
+    sortProducts(sortBy);
+    setActiveSortOption(sortBy);
+    setShowShortModal(false);
+    setIsFilterActive(true);
+  };
+  const handleResetFilter = () => {
+    sortProducts("price-asc");
+    setActiveSortOption(null);
+    setShowShortModal(false);
+    setIsFilterActive(false);
+  };
 
   return (
     <Wrapper>
@@ -175,7 +188,68 @@ const ShopScreen = () => {
         onRequestClose={() => setShowShortModal(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}></View>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Trier par</Text>
+              <TouchableOpacity onPress={() => setShowShortModal(false)}>
+                <AntDesign 
+                name='close'
+                size={24}
+                color={AppColors.text.primary}
+                onPress={() => setShowShortModal(false)}
+              />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity 
+              style={styles.sortOption}
+              onPress={()=> handleSort("price-asc")}
+            >
+              <Text 
+                style={[
+                  styles.sortOptionText,
+                  activeSortOption === "price-asc" && styles.activeSortText,
+                ]}
+              >
+                Prix: Plus bas au plus élevé
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+               style={styles.sortOption}
+              onPress={()=> handleSort("price-desc")}
+            >
+              <Text style={[
+                  styles.sortOptionText,
+                  activeSortOption === "price-desc" && styles.activeSortText,
+                ]}
+              >
+                Prix: Plus élevé au plus bas 
+              </Text>
+            </TouchableOpacity>
+             <TouchableOpacity 
+               style={styles.sortOption}
+              onPress={()=> handleSort("rating")}
+            >
+              <Text style={[
+                  styles.sortOptionText,
+                  activeSortOption === "rating" && styles.activeSortText,
+                ]}
+              >
+                 Meilleur note
+              </Text>
+            </TouchableOpacity>
+            {isFilterActive && (
+              <TouchableOpacity 
+                style={styles.sortOption}
+                onPress={handleResetFilter}
+              >
+                <Text
+                style={[ styles.sortOptionText, { color: AppColors.error}]}
+                >
+                  Supprimer les filtres
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
       </Modal>
     </Wrapper>
@@ -249,6 +323,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: AppColors.error,
   },
+  activeSortText: {
+    color: AppColors.primary[600],
+    fontWeight: 'bold',
+  },
   categoriesContainer: {
     paddingVertical: 8,
   },
@@ -305,15 +383,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: AppColors.text.primary,
   },
-  sortOption: {
-    // paddingVertical: 16,
+  sortOptionView: {
     borderWidth: 1,
     borderColor: AppColors.gray[200],
     width: 45,
     height: 45,
     borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: 'center'
+  },
+  sortOption: {
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: AppColors.gray[200],
   },
   activeSortOption: {
     backgroundColor: AppColors.background.secondary
