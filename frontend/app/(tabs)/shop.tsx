@@ -7,6 +7,8 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useProductStore } from '@/store/productStore';
 import { API_URL } from '@/config';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import EmptyState from '@/components/EmptyState';
 
 
 
@@ -118,14 +120,28 @@ const ShopScreen = () => {
       </View>
     );
   };
+  // if (loading && filteredProducts?.length === 0) {
+  //   return (
+  //     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+  //       <LoadingSpinner fullScreen />;
+  //     </View>
+  //   );
+  // }
+  // if (error) {
+  //   return (
+  //     <Wrapper>
+  //       <View style={styles.errorContainer}>
+  //         <Text style={styles.errorText}>Erreur: {error}</Text>
+  //       </View>
+  //     </Wrapper>
+  //   );
+  // }
 
   return (
    <Wrapper>
       {renderHeader()}
       {filteredProducts?.length === 0 ? (
-        <View>
-          <Text>Pas de produits</Text>
-        </View>
+        <EmptyState />
       ) : ( 
         <View>
           <Text>Produits</Text>
