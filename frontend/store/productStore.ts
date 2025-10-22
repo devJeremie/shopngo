@@ -70,6 +70,7 @@ export const useProductStore = create<ProductsState>((set, get) =>
                 set({ selectedCategory: category, loading: true, error: null});
 
                 if ( category) {
+                    set ({ loading: true, error: null });
                     const products = await getProductsByCategory(category);
                     set ({ filteredProducts: products, loading: false});
                 } else {

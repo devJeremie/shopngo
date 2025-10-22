@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { AppColors } from '@/constants/theme';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
+import Button from './Button';
 
 type EmptyStateType = "cart" | "search" | "favorites" | "orders" | "profile";
 interface EmptyStateProps {
@@ -17,7 +18,7 @@ const EmptyState:React.FC<EmptyStateProps> = ({
 }) => {
     const size = 64;
     const color = AppColors.gray[400];
-    const getItem= () => {
+    const getIcon= () => {
         switch (type) {
             case "cart":
                 return <AntDesign name='shopping-cart' size={size} color={color}/>;
@@ -42,8 +43,17 @@ const EmptyState:React.FC<EmptyStateProps> = ({
         }
     };
   return (
-    <View>
-      <Text>EmptyState</Text>
+    <View style={styles.container}>
+      <Text style={styles.iconContainer}>{getIcon()}</Text>
+      <Text style={styles.message}>{message || getDefaultMessage()}</Text>
+      {actionLabel && onAction &&(
+        <Button 
+            title={actionLabel} 
+            onPress={onAction}
+            variant="primary"
+            style={styles.button}
+            />
+      )}
     </View>
   )
 }

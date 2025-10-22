@@ -1,6 +1,10 @@
-import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { 
+  FlatList, Modal, Platform, 
+  ScrollView, StyleSheet, 
+  Text, TouchableOpacity, 
+  View 
+} from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { AppColors } from '@/constants/theme';
 import Wrapper from '@/components/Wrapper';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
@@ -9,6 +13,7 @@ import { useProductStore } from '@/store/productStore';
 import { API_URL } from '@/config';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import EmptyState from '@/components/EmptyState';
+import ProductCard from '@/components/ProductCard';
 
 
 
@@ -37,7 +42,8 @@ const ShopScreen = () => {
     if (categoryParam) {
       setCategory(categoryParam);
     }
-  }, [])
+  }, []);
+  console.log(loading);
   
     const router = useRouter();
 
@@ -65,10 +71,13 @@ const ShopScreen = () => {
             />
           </View>
           </TouchableOpacity>
-          <TouchableOpacity style={[
-            styles.sortOption,
-            isFilterActive && styles.activeSortButton, 
-          ]}>
+          <TouchableOpacity 
+            onPress={ () => setShowShortModal(true)}
+            style={[
+              styles.sortOption,
+              isFilterActive && styles.activeSortButton, 
+            ]}
+          >
             <AntDesign 
               name='filter'
               size={20}
@@ -120,36 +129,58 @@ const ShopScreen = () => {
       </View>
     );
   };
-  // if (loading && filteredProducts?.length === 0) {
-  //   return (
-  //     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-  //       <LoadingSpinner fullScreen />;
-  //     </View>
-  //   );
-  // }
-  // if (error) {
-  //   return (
-  //     <Wrapper>
-  //       <View style={styles.errorContainer}>
-  //         <Text style={styles.errorText}>Erreur: {error}</Text>
-  //       </View>
-  //     </Wrapper>
-  //   );
-  // }
+  
+  if (error) {
+    return (
+      <Wrapper>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>Erreur: {error}</Text>
+        </View>
+      </Wrapper>
+    );
+  }
 
   return (
-   <Wrapper>
+    <Wrapper>
       {renderHeader()}
-      {filteredProducts?.length === 0 ? (
-        <EmptyState />
+      {loading ? (
+       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+         <LoadingSpinner fullScreen />;
+       </View>
+      ) : filteredProducts?.length === 0 ? (
+        <EmptyState 
+          type='search'
+          message="Pas de produits trouvé dans votre recherche"
+        />
       ) : ( 
-        <View>
-          <Text>Produits</Text>
-        </View>
+        <FlatList 
+          data={filteredProducts}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={2}
+          renderItem={({item}) => (
+            <View style={styles.productContainer}>
+              <ProductCard product={item} customStyle={{ width: '100%'}}/>
+            </View>
+          )}
+          contentContainerStyle= {styles.productsGrid}
+          columnWrapperStyle= {styles.columnWrapper}
+          showsVerticalScrollIndicator  //pour ceux qui ne le veulent pas il suffit ={false}
+          ListEmptyComponent={<View style= {styles.footer} />}
+        />
       )}
-   </Wrapper>
-  )
-}
+      <Modal 
+        visible={showShortModal}
+        transparent
+        animationType='fade'
+        onRequestClose={() => setShowShortModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}></View>
+        </View>
+      </Modal>
+    </Wrapper>
+  );
+};
 
 
 export default ShopScreen;
@@ -242,6 +273,7 @@ const styles = StyleSheet.create({
   productsGrid: {
     paddingHorizontal: 5,
     paddingTop: 16,
+    paddingBottom: 50,
   },
   columnWrapper: {
     justifyContent: "space-between",
