@@ -30,6 +30,7 @@ const ShopScreen = () => {
     error, fetchProducts,
     setCategory, sortProducts,  
     fetchCategories, categories,
+    products,
   } = useProductStore();
   
   const [showShortModal, setShowShortModal] = useState(false);

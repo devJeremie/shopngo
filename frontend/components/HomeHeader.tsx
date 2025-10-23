@@ -8,9 +8,10 @@ import Logo from './Logo'
 import { AppColors } from '@/constants/theme'
 import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import { useProductStore } from '@/store/productStore'
 
 const HomeHeader = () => {
-    const router = useRouter()
+    const router = useRouter();
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.header}>

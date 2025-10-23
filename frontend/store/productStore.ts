@@ -127,13 +127,19 @@ export const useProductStore = create<ProductsState>((set, get) =>
             try {
                 set({ loading: true, error: null});
 
-                if (!query.trim()) {
-                    set ({ filteredProducts: get().products, loading: false });
-                    return;
+                // if (!query.trim()) {
+                //     set ({ filteredProducts: get().products, loading: false });
+                //     return;
+                // }
+
+                if(query?.length >= 3 ) { //modif ici aussi
+                    const searchResults = await searchProductsApi(query);
+                    set({ filteredProducts: searchResults, loading: false});
+                } else {
+                    set({ filteredProducts: [], loading: false });
                 }
 
-                const searchResults = await searchProductsApi(query);
-                set({ filteredProducts: searchResults, loading: false});
+               
             } catch (error: any) {
                 set({ error: error.message, loading: false});
             }

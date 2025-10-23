@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { AppColors } from '@/constants/theme'
 import Wrapper from '@/components/Wrapper'
 import { useProductStore } from '@/store/productStore'
@@ -14,15 +14,38 @@ const SearchScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const searchTimeOutRef = useRef<number | null>(null);
   const {
-    products, filteredProducts, 
+    filteredProducts, error,
     loading, fetchProducts, 
     searchProductsRealTime,
-    error, 
+     
   } = useProductStore();
+
+  useEffect(() => {
+  //   if (filteredProducts?.length === 0) {
+  //     fetchProducts();
+  //   }
+    //clear timeout on component unmount
+    return () => {
+      if (searchTimeOutRef.current) {
+        clearTimeout(searchTimeOutRef.current);
+      }
+    };
+  }, [])
 
   const handleSearchChange = (text: string) => {
     setSearchQuery(text);
+    if (searchTimeOutRef.current) {
+      clearTimeout(searchTimeOutRef.current);
+    }
+    if (searchQuery.length >= 3) {  //modification ici
+      searchTimeOutRef.current = setTimeout(() => {
+        searchProductsRealTime(text)
+      },500); 
+    } else {
+      searchProductsRealTime("");
+    }
   };
+
   const handleClearSearch = () => {
     setSearchQuery("");
     searchProductsRealTime("");
@@ -92,7 +115,7 @@ const SearchScreen = () => {
           keyExtractor={(item) => item.id.toString()}
           numColumns={2}
           renderItem={({item}) => (
-            <View>
+            <View style={styles.productContainer}>
               <ProductCard 
                 product={item}
                 customStyle={{width: '100%'}}
@@ -102,6 +125,13 @@ const SearchScreen = () => {
           contentContainerStyle={styles.productsGrid}
           columnWrapperStyle={styles.columnWrapper}
           ListFooterComponent={<View style={styles.footer} />}
+          ListEmptyComponent={
+            !searchQuery ? (
+              <View style={styles.emptyStateContainer}>
+                <Text style={styles.emptyStateText}>Saisissez au moins 3 lettres afin de lancer la recherche</Text>
+              </View>
+            ) : null
+          }
         />
       )}
     </Wrapper>
