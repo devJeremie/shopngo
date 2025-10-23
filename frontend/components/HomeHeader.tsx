@@ -6,7 +6,7 @@ import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Logo from './Logo'
 import { AppColors } from '@/constants/theme'
-import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
+import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 
 const HomeHeader = () => {
@@ -20,7 +20,7 @@ const HomeHeader = () => {
                     style={styles.searchButton}
                     onPress={() => router.push('/(tabs)/search')}
                 >
-                    <AntDesign 
+                    <Ionicons 
                         name="search"
                         size={20} 
                         color={AppColors.primary[700]} 

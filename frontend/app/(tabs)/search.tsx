@@ -1,9 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { AppColors } from '@/constants/theme'
 import Wrapper from '@/components/Wrapper'
 import { useProductStore } from '@/store/productStore'
 import TextInput from '@/components/TextInput'
+import { AntDesign, Ionicons } from '@expo/vector-icons'
+import LoadingSpinner from '@/components/LoadingSpinner'
+import EmptyState from '@/components/EmptyState'
+import ProductCard from '@/components/ProductCard'
 
 
 const SearchScreen = () => {
@@ -13,10 +17,15 @@ const SearchScreen = () => {
     products, filteredProducts, 
     loading, fetchProducts, 
     searchProductsRealTime,
+    error, 
   } = useProductStore();
 
-  const handleSearchChange = () => {
-
+  const handleSearchChange = (text: string) => {
+    setSearchQuery(text);
+  };
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    searchProductsRealTime("");
   }
 
   const renderHeader = () => {
@@ -24,15 +33,38 @@ const SearchScreen = () => {
       <View style={styles.header}>
         <Text style={styles.title}>Recherche de produits</Text>
         <View style={styles.searchRow}>
-          <View style={styles.inputWrapper}>
-            <TextInput 
-              value={searchQuery}
-              onChangeText={handleSearchChange}
-              placeholder='Rechercher un produit'
-              style={styles.searchInput}
-              inputStyle={styles.searchInputStyle}
-            />
+          <View style={styles.searchContainer}>
+            <View style={styles.inputWrapper}>
+              <TextInput 
+                value={searchQuery}
+                onChangeText={handleSearchChange}
+                placeholder='Rechercher un produit'
+                style={styles.searchInput}
+                inputStyle={styles.searchInputStyle}
+              />
+              {searchQuery?.length > 0 && (
+                <TouchableOpacity 
+                  style={styles.clearButton}
+                  onPress={handleClearSearch}
+                >
+                  <AntDesign 
+                    name="close"
+                    size={16}
+                    color={AppColors.gray[500]}
+                  />
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
+          <TouchableOpacity 
+            onPress={() => searchProductsRealTime(searchQuery)}
+            style={styles.searchButton}>
+            <Ionicons 
+              name='search'
+              size={24}
+              color={AppColors.background.primary}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -41,9 +73,40 @@ const SearchScreen = () => {
   return (
     <Wrapper>
       {renderHeader()}
+      {loading ? (
+        <LoadingSpinner />
+      ) : error ? (
+        <View>
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        </View>
+      ) : filteredProducts?.length === 0 && searchQuery ? (
+        <EmptyState 
+          type= "search"
+          message= "Pas de produits correspondant"
+        />
+      ) : (
+        <FlatList 
+          data={searchQuery ? filteredProducts : []}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={2}
+          renderItem={({item}) => (
+            <View>
+              <ProductCard 
+                product={item}
+                customStyle={{width: '100%'}}
+              />
+            </View>
+          )}
+          contentContainerStyle={styles.productsGrid}
+          columnWrapperStyle={styles.columnWrapper}
+          ListFooterComponent={<View style={styles.footer} />}
+        />
+      )}
     </Wrapper>
-  )
-}
+  );
+};
 
 export default SearchScreen
 
@@ -63,6 +126,7 @@ const styles = StyleSheet.create({
   searchRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    // flex: 1,
   },
   searchContainer: {
     flex: 1,
@@ -117,7 +181,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   errorContainer: {
-    flex: 1,
+    // flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
