@@ -1,4 +1,5 @@
 import { 
+    Platform,
     StyleSheet, Text,
      TouchableOpacity, View,
 } from 'react-native'
@@ -76,6 +77,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingTop: 16,
         zIndex: 10,
+        marginTop: Platform.OS === "android" ? 35 : 0,
     },
     backButton: {
         width: 40,
