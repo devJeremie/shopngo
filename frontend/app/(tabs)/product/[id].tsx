@@ -10,6 +10,7 @@ import Wrapper from '@/components/Wrapper';
 import Button from '@/components/Button';
 import Rating from '@/components/Rating';
 import { AntDesign } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
 
 const {width} = Dimensions.get("window");
 
@@ -59,8 +60,17 @@ const SingleProductScreen = () => {
           style={styles.errorButton}
         />
       </View>
-    )
+    );
   }
+
+  const handleAddToCart = () => {
+      Toast.show({
+        type: 'success',
+        text1: `Produit ${product?.title} ajouté au panier 👋`,
+        text2: "Voir le panier pour finaliser votre achat.",
+        visibilityTime: 2000,
+      });
+  };
 
   return (
     <View style={styles.headerContainerStyle}>
@@ -97,6 +107,7 @@ const SingleProductScreen = () => {
                       setQuantity((prev) => prev-1)
                     }
                   }}
+                  disabled={quantity <= 1}
                   style={styles.quantityButton}>
                   <AntDesign 
                     name='minus'
@@ -120,6 +131,14 @@ const SingleProductScreen = () => {
             </View>
           </View>
         </ScrollView>
+        <View style={styles.footer}>
+          <Text style={styles.totalPrice}>Total: €{(product?.price * quantity).toFixed(2)}</Text>
+          <Button 
+            title= "AJouter au panier"
+            onPress={handleAddToCart}
+            style={styles.addToCartButton}
+          />
+        </View>
     </View>
   )
 }
@@ -127,6 +146,14 @@ const SingleProductScreen = () => {
 export default SingleProductScreen
 
 const styles = StyleSheet.create({
+    addToCartButton: {
+      width: "50%",
+    },
+    totalPrice: {
+      fontFamily: "Inter-Bold",
+      fontSize: 18,
+      color: AppColors.text.primary,
+    },
     headerContainerStyle: {
       paddingTop: 30,
       backgroundColor: AppColors.background.primary,
@@ -247,5 +274,10 @@ const styles = StyleSheet.create({
       height: width, 
       alignItems: "center",
       justifyContent: 'center'   
-  }
+    },
+    container: {
+      flex: 1,
+      backgroundColor: AppColors.background.primary,
+      position: "relative",
+    },
 })
