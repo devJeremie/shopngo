@@ -69,7 +69,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 resizeMode='contain'
             />
             <TouchableOpacity
-            onPress={handleToggleFavorite}
+                onPress={handleToggleFavorite}
                 style={[styles.favoriteButton, { borderWidth: isFav ? 1 : 0 }]}
             >
                 <AntDesign 
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     favoriteButton: {
         position: 'absolute',
         top: 8,
-        right: 8,
+        right: -45,
         backgroundColor: 'rgba(255, 255, 255, 0.8)',
         borderRadius: 18,
         padding: 2,
