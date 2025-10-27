@@ -48,10 +48,10 @@ const CommonHeader = ({isFav,handleToggleFavorite}:Props) => {
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={()=> router.push("/(tabs)/cart")}
-                style={[
-                    styles.favoriteButton,
+                style={
+                    styles.favoriteButton
                     // isFav && styles.activeFavoriteButton
-                ]}
+                }
             >
                 <MaterialCommunityIcons 
                     name="cart-outline" 
