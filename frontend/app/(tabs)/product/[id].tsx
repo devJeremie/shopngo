@@ -11,6 +11,8 @@ import Button from '@/components/Button';
 import Rating from '@/components/Rating';
 import { AntDesign } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
+import { useCartStore } from '@/store/cartStore';
+import { useFavoritesStore } from '@/store/favoriteStore';
 
 const {width} = Dimensions.get("window");
 
@@ -21,6 +23,9 @@ const SingleProductScreen = () => {
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const idNum = Number(id);
+
+  const { addItem} = useCartStore();
+  const { isFavorite ,toggleFavorite} = useFavoritesStore();
 
   const router = useRouter();
 
@@ -62,8 +67,9 @@ const SingleProductScreen = () => {
       </View>
     );
   }
-
+  const isFav = isFavorite(product?.id);
   const handleAddToCart = () => {
+    addItem(product, quantity);
       Toast.show({
         type: 'success',
         text1: `Produit ${product?.title} ajouté au panier 👋`,
@@ -71,10 +77,15 @@ const SingleProductScreen = () => {
         visibilityTime: 2000,
       });
   };
+  const handleToggleFavorite = () => {
+    if (product) {
+      toggleFavorite(product);
+    }
+  }
 
   return (
     <View style={styles.headerContainerStyle}>
-        <CommonHeader />
+        <CommonHeader isFav={isFav} handleToggleFavorite={handleToggleFavorite}/>
         <ScrollView showsVerticalScrollIndicator= {false}>
           <View style={styles.imageContainer}>
             <Image 

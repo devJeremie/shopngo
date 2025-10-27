@@ -1,6 +1,5 @@
 import { 
-    Platform,
-    StyleSheet, Text,
+    Platform, StyleSheet,
      TouchableOpacity, View,
 } from 'react-native'
 import React from 'react';
@@ -10,11 +9,11 @@ import { useRouter } from 'expo-router';
 
 interface Props {
     isFav?: boolean;
-    showCart?: boolean;
+    // showCart?: boolean;
     handleToggleFavorite?: () => void;
 }
 
-const CommonHeader = ({isFav,showCart,handleToggleFavorite}:Props) => {
+const CommonHeader = ({isFav,handleToggleFavorite}:Props) => {
     const router = useRouter();
     const handleGoBack = () => {
         if (router.canGoBack()) {
@@ -32,11 +31,11 @@ const CommonHeader = ({isFav,showCart,handleToggleFavorite}:Props) => {
         </TouchableOpacity>
         <View style={styles.buttonView}>
             <TouchableOpacity
+                onPress={handleToggleFavorite}
                 style={[
                     styles.favoriteButton,
                     isFav && styles.activeFavoriteButton
                 ]}
-                onPress={handleToggleFavorite}
             >
                 <AntDesign 
                     name="heart" 
@@ -51,14 +50,15 @@ const CommonHeader = ({isFav,showCart,handleToggleFavorite}:Props) => {
                 onPress={()=> router.push("/(tabs)/cart")}
                 style={[
                     styles.favoriteButton,
-                    isFav && styles.activeFavoriteButton
+                    // isFav && styles.activeFavoriteButton
                 ]}
             >
                 <MaterialCommunityIcons 
                     name="cart-outline" 
                     size={24} 
                     color={
-                        isFav ? AppColors.background.primary : AppColors.text.primary
+                        // isFav ? AppColors.background.primary : 
+                        AppColors.text.primary
                     } 
                     fill={isFav ? AppColors.background.primary : "transparent"}
                 />

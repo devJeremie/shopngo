@@ -2,7 +2,7 @@ import {
     StyleSheet, Text,
     View, StyleProp, 
     ViewStyle, Image,
-    TouchableOpacity, Alert, 
+    TouchableOpacity, 
     } from 'react-native';
 import React from 'react';
 import { AppColors } from '@/constants/theme';
@@ -11,6 +11,9 @@ import Button from './Button';
 import Toast from 'react-native-toast-message';
 import { useRouter } from 'expo-router';
 import Rating from './Rating';
+import { useCartStore } from '@/store/cartStore';
+import { useFavoritesStore } from '@/store/favoriteStore';
+import { AntDesign } from '@expo/vector-icons';
 
 interface ProductCardProps {
     product: Product;
@@ -20,7 +23,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ 
     product, 
-    compact=false, 
+    compact = false, 
     customStyle
 }) => {
     const { id, title, price, category, image, rating} = product;
@@ -32,9 +35,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
         //juste les routes strictes / statiques
         router.push(`/product/${id}` as any);
     };
+    const {addItem} = useCartStore();
+    const { isFavorite, toggleFavorite } = useFavoritesStore();
+    const isFav = isFavorite(id);
 
     const handleAddToCart = () => {
-        // Logique pour ajouter le produit au panier
+        // e.stopPropagation();
+        addItem(product, 1);
         Toast.show({
             type: 'success',
             text1: `Produit ${title} ajouté au panier 👋`,
@@ -44,6 +51,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
             
         });
         // Alert.alert(`Produit ${title} ajouté au panier`);
+    };
+    const handleToggleFavorite = () => {
+        toggleFavorite(product);
     };
 
   return (
@@ -58,6 +68,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 style={styles.image}
                 resizeMode='contain'
             />
+            <TouchableOpacity
+            onPress={handleToggleFavorite}
+                style={[styles.favoriteButton, { borderWidth: isFav ? 1 : 0 }]}
+            >
+                <AntDesign 
+                  name='heart' 
+                  size={18}
+                  color={isFav ? AppColors.error : AppColors.gray[400]} 
+                />
+            </TouchableOpacity>
         </View>
         <View style={styles.content}>
             <Text style={styles.category}>{category}</Text>
@@ -141,7 +161,7 @@ const styles = StyleSheet.create({
         height: 32,
         justifyContent: 'center',
         alignItems: 'center',
-        borderColor: AppColors.warning,
+        borderColor: AppColors.error,
     },
     image: {
         width: '100%',
