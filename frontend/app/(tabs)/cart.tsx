@@ -22,12 +22,19 @@ const CartScreen = () => {
           <View style={styles.header}>
             <Title>Produits du panier</Title>
             <Text style={styles.itemCount}>{items?.length} produits</Text>
+          </View>
             <FlatList 
               data={items}
               keyExtractor={(item) => item.product.id.toString()}
-              renderItem={({item}) => ( <CartItem /> )}
+              renderItem={({item}) => ( 
+                <CartItem  product={item} quantity={item.quantity}/> 
+              )}
               contentContainerStyle={styles.cartItemsContainer}
             />
+          <View style={styles.summaryContainer}>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>Sous-total: </Text>
+            </View>
           </View>
         </>
       ) : (
