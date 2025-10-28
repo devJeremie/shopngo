@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { useRouter } from 'expo-router'
 import { useCartStore } from '@/store/cartStore';
 import { useAuthStore } from '@/store/authStore';
+import MainLayout from '@/components/MainLayout';
 
 const CartScreen = () => {
   const router = useRouter();
@@ -11,9 +12,11 @@ const CartScreen = () => {
   const [loading, setLoading] = useState(false); 
 
   return (
-    <View>
-      <Text>CartScreen</Text>
-    </View>
+    <MainLayout>
+      <View>
+        <Text>Panier</Text>
+      </View>
+    </MainLayout>
   )
 }
 
