@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { FlatList, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import { useRouter } from 'expo-router'
 import { useCartStore } from '@/store/cartStore';
@@ -7,6 +7,7 @@ import MainLayout from '@/components/MainLayout';
 import EmptyState from '@/components/EmptyState';
 import { AppColors } from '@/constants/theme';
 import { Title } from '@/components/customText';
+import CartItem from '@/components/CartItem';
 
 const CartScreen = () => {
   const router = useRouter();
@@ -17,9 +18,18 @@ const CartScreen = () => {
   return (
     <MainLayout>
       {items?.length > 0 ? (
-        <View style={styles.header}>
-          <Title>Produits du panier</Title>
-        </View>
+        <>
+          <View style={styles.header}>
+            <Title>Produits du panier</Title>
+            <Text style={styles.itemCount}>{items?.length} produits</Text>
+            <FlatList 
+              data={items}
+              keyExtractor={(item) => item.product.id.toString()}
+              renderItem={({item}) => ( <CartItem /> )}
+              contentContainerStyle={styles.cartItemsContainer}
+            />
+          </View>
+        </>
       ) : (
         <EmptyState 
           type="cart"
@@ -40,6 +50,7 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingBottom: 16,
+    paddingTop: 7,
     backgroundColor: AppColors.background.primary,
   },
   itemCount: {
@@ -49,8 +60,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   cartItemsContainer: {
-    paddingTop: 16,
-    paddingBottom: 16,
+    paddingVertical: 16,
   },
   summaryContainer: {
     backgroundColor: AppColors.background.primary,
