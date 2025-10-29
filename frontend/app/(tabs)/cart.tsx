@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { useRouter } from 'expo-router'
 import { useCartStore } from '@/store/cartStore';
@@ -15,25 +15,48 @@ const CartScreen = () => {
   const { user } = useAuthStore();
   const [loading, setLoading] = useState(false); 
 
+  const subtotal = getTotalPrice();
+  const shippingCost = subtotal > 100 ? 5.99 : 0;
+  const total = subtotal + shippingCost;
+
   return (
     <MainLayout>
       {items?.length > 0 ? (
         <>
-          <View style={styles.header}>
+          <View style={styles.headerView}>
+            <View style={styles.header}>
             <Title>Produits du panier</Title>
             <Text style={styles.itemCount}>{items?.length} produits</Text>
+            </View>
+            <View>
+              <TouchableOpacity onPress={() => clearCart()}>
+                <Text style={styles.resetText}>Vider le panier</Text>
+              </TouchableOpacity>
+            </View>
           </View>
             <FlatList 
               data={items}
               keyExtractor={(item) => item.product.id.toString()}
               renderItem={({item}) => ( 
-                <CartItem  product={item} quantity={item.quantity}/> 
+                <CartItem product={item.product} quantity={item.quantity}/> 
               )}
               contentContainerStyle={styles.cartItemsContainer}
+              showsVerticalScrollIndicator={false}
             />
           <View style={styles.summaryContainer}>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Sous-total: </Text>
+              <Text style={styles.summaryValue}>€{subtotal.toFixed(2)}</Text>
+            </View>
+            {shippingCost > 0 && (
+              <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>Frais de port: </Text>
+              <Text style={styles.summaryValue}>€{shippingCost.toFixed(2)}</Text>
+            </View>
+            )}
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>Total: </Text>
+              <Text style={styles.summaryValue}>€{total.toFixed(2)}</Text>
             </View>
           </View>
         </>
@@ -54,6 +77,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: AppColors.background.secondary,
+  },
+   resetText: {
+    color: AppColors.error
+  },
+  headerView: {
+    paddingTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: AppColors.gray[200],
+    flexDirection: 'row',
+    justifyContent: "space-between",
+    alignItems: 'flex-start'
   },
   header: {
     paddingBottom: 16,
@@ -123,5 +157,6 @@ const styles = StyleSheet.create({
   loginText: {
     fontWeight: "700",
     color: AppColors.primary[500]
-  }
+  },
+ 
 })
