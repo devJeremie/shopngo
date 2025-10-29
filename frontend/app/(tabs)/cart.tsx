@@ -1,6 +1,9 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { 
+  FlatList, StyleSheet, 
+  Text, TouchableOpacity, 
+  View } from 'react-native'
 import React, { useState } from 'react'
-import { useRouter } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import { useCartStore } from '@/store/cartStore';
 import { useAuthStore } from '@/store/authStore';
 import MainLayout from '@/components/MainLayout';
@@ -8,6 +11,7 @@ import EmptyState from '@/components/EmptyState';
 import { AppColors } from '@/constants/theme';
 import { Title } from '@/components/customText';
 import CartItem from '@/components/CartItem';
+import Button from '@/components/Button';
 
 const CartScreen = () => {
   const router = useRouter();
@@ -16,13 +20,17 @@ const CartScreen = () => {
   const [loading, setLoading] = useState(false); 
 
   const subtotal = getTotalPrice();
-  const shippingCost = subtotal > 100 ? 5.99 : 0;
+  const shippingCost = subtotal > 50 ? 5.99 : 0;
   const total = subtotal + shippingCost;
+
+  const handlePlaceOrder = async() => {
+
+  }
 
   return (
     <MainLayout>
       {items?.length > 0 ? (
-        <>
+        <View style={styles.container}>
           <View style={styles.headerView}>
             <View style={styles.header}>
             <Title>Produits du panier</Title>
@@ -58,8 +66,25 @@ const CartScreen = () => {
               <Text style={styles.summaryLabel}>Total: </Text>
               <Text style={styles.summaryValue}>€{total.toFixed(2)}</Text>
             </View>
+            <Button
+              title="Passer commande"
+              fullWidth 
+              style={styles.checkoutButton} 
+              disabled = {!user || loading}
+              onPress={handlePlaceOrder}
+            />
+            {!user && (
+              <View style={styles.alertView}>
+                <Text style={styles.alertText}>
+                  Connectez-vous pour passer commande
+                </Text>
+                <Link href={"/(tabs)/login"}>
+                  <Text style={styles.loginText}>Connexion</Text>
+                </Link>
+              </View>
+            )}
           </View>
-        </>
+        </View>
       ) : (
         <EmptyState 
           type="cart"
@@ -76,7 +101,8 @@ export default CartScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: AppColors.background.secondary,
+    position: 'relative',
+    // backgroundColor: AppColors.background.secondary,
   },
    resetText: {
     color: AppColors.error
@@ -104,6 +130,9 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   summaryContainer: {
+    // position: 'absolute',
+    // bottom: 200,
+    // width: "100%",
     backgroundColor: AppColors.background.primary,
     paddingVertical: 20,
     borderTopWidth: 1,
