@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const payment = () => {
+const PaymentScreen = () => {
   return (
     <View>
-      <Text>payment</Text>
+      <Text>PaymentScreen</Text>
     </View>
   )
 }
 
-export default payment
+export default PaymentScreen;
 
 const styles = StyleSheet.create({})

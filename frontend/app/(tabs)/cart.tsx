@@ -24,7 +24,7 @@ const CartScreen = () => {
   const total = subtotal + shippingCost;
 
   const handlePlaceOrder = async() => {
-
+    
   }
 
   return (

@@ -75,6 +75,10 @@ export default function TabLayout() {
         name="orders"
         options={{ href: null }}
       />
+      <Tabs.Screen
+        name="payment"
+        options={{ href: null }}
+      />
 
     </Tabs>
   );
