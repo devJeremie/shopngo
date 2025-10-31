@@ -23,9 +23,9 @@ const CartScreen = () => {
   const shippingCost = subtotal > 50 ? 5.99 : 0;
   const total = subtotal + shippingCost;
 
-const handlePlaceOrder = async() => {
-  router.push("/")
-}
+const handlePlaceOrder = async () => {
+  router.push("/(tabs)/payment");
+} ;
 
   return (
     <MainLayout>
@@ -96,7 +96,7 @@ const handlePlaceOrder = async() => {
   )
 }
 
-export default CartScreen
+export default CartScreen;
 
 const styles = StyleSheet.create({
   container: {
