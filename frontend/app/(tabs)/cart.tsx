@@ -23,9 +23,9 @@ const CartScreen = () => {
   const shippingCost = subtotal > 50 ? 5.99 : 0;
   const total = subtotal + shippingCost;
 
-  const handlePlaceOrder = async() => {
-    
-  }
+const handlePlaceOrder = async() => {
+  router.push("/")
+}
 
   return (
     <MainLayout>

@@ -11,4 +11,6 @@ const PaymentScreen = () => {
 
 export default PaymentScreen;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    
+})
