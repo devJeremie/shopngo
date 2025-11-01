@@ -12,6 +12,7 @@ import { AppColors } from '@/constants/theme';
 import { Title } from '@/components/customText';
 import CartItem from '@/components/CartItem';
 import Button from '@/components/Button';
+import Toast from 'react-native-toast-message';
 
 const CartScreen = () => {
   const router = useRouter();
@@ -24,9 +25,18 @@ const CartScreen = () => {
   const total = subtotal + shippingCost;
 
 const handlePlaceOrder = async () => {
-  router.push("/(tabs)/payment");
-} ;
-
+  // 
+  if(!user) {
+    Toast.show({
+      type: "error",
+      text1: "Connexion requise",
+      text2: "Svp connectez-vous pour passer une commande",
+      position: "bottom",
+      visibilityTime: 2000,
+    });
+    return;
+  }
+};
   return (
     <MainLayout>
       {items?.length > 0 ? (
