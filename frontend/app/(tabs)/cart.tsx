@@ -13,6 +13,8 @@ import { Title } from '@/components/customText';
 import CartItem from '@/components/CartItem';
 import Button from '@/components/Button';
 import Toast from 'react-native-toast-message';
+import { supabase } from '@/lib/supabase';
+import axios from "axios";
 
 const CartScreen = () => {
   const router = useRouter();
@@ -25,7 +27,6 @@ const CartScreen = () => {
   const total = subtotal + shippingCost;
 
 const handlePlaceOrder = async () => {
-  // 
   if(!user) {
     Toast.show({
       type: "error",
@@ -35,6 +36,59 @@ const handlePlaceOrder = async () => {
       visibilityTime: 2000,
     });
     return;
+  }
+  try {
+    setLoading(true);
+    const orderData = {
+      user_email:user.email,
+      total_price:total,
+      items:items.map((item) =>({
+        product_id:item.product.id,
+        title:item.product.title,
+        price:item.product.price,
+        quantity:item.quantity,
+        image:item.product.image,
+      })),
+      payment_status: "En attente",
+    };
+    //Insert order into Supabase
+    const {data,error}=await supabase
+      .from("orders")
+      .insert([orderData])
+      .select()
+      .single();
+
+      if(error) {
+        throw new Error(`Echec de sauvegarde de la commande: ${error.message}`);
+      }
+      const payload = {
+        price: total,
+        email: user?.email,
+      };
+      const response = await axios.post(
+        "http://localhost:8000/checkout",
+        payload, 
+        {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      // console.log("response:", response);
+      const { paymentIntent, ephemeralKey, customer} = response.data;
+      console.log(paymentIntent, ephemeralKey, customer);
+      
+  } catch (error) {
+    Toast.show({
+      type: "error",
+      text1: "Commande échoué",
+      text2: "Echec de la commande",
+      position: "bottom",
+      visibilityTime: 2000,
+    });
+    console.log("Erreur de la commande", error);
+  } finally {
+    setLoading(false);
   }
 };
   return (

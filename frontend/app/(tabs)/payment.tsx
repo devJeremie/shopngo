@@ -8,7 +8,7 @@ const PaymentScreen = () => {
     <View style={styles.container}>
         <Text style={styles.title}>Complétez votre paiement</Text>
         <Text style={styles.subtitle}>
-            Veuillez confirmer vos informations de paiement pour finaliser l'achat
+            Veuillez confirmer vos informations de paiement pour finaliser la commande
         </Text>
         <Text style={styles.totalPrice}>Total: € 100</Text>
         <Button 
