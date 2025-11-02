@@ -66,7 +66,8 @@ const handlePlaceOrder = async () => {
         email: user?.email,
       };
       const response = await axios.post(
-        "http://localhost:8000/checkout",
+        // "http://localhost:8000/checkout",
+        "http://192.168.1.15:8000/checkout",
         payload, 
         {
           headers: {
@@ -76,13 +77,35 @@ const handlePlaceOrder = async () => {
       );
       // console.log("response:", response);
       const { paymentIntent, ephemeralKey, customer} = response.data;
-      console.log(paymentIntent, ephemeralKey, customer);
-      
+      // console.log("res",paymentIntent, ephemeralKey, customer);
+      if (!paymentIntent || !ephemeralKey || !customer) {
+        throw new Error("Données Stripe requises manquantes depuis le serveur");
+      } else {
+        //Navigate to PaymentScreen with Stripe data as props
+        Toast.show({
+          type: "success",
+          text1: "Commande échoué",
+          text2: "Echec de la commande",
+          position: "bottom",
+          visibilityTime: 2000,
+        });
+        router.push({
+          pathname: "/(tabs)/payment",
+          params:{
+            paymentIntent,
+            ephemeralKey,
+            customer,
+            orderId:data.id, //Pass supabase order Id for potential updates
+            total: total,
+          },
+        });
+        clearCart();
+      }
   } catch (error) {
     Toast.show({
       type: "error",
-      text1: "Commande échoué",
-      text2: "Echec de la commande",
+      text1: "Commande passée",
+      text2: "Commande passée avec succés",
       position: "bottom",
       visibilityTime: 2000,
     });
