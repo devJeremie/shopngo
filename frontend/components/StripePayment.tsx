@@ -1,12 +1,12 @@
 import { 
-  Alert,
-    StyleSheet, Text, 
-    View 
+  Alert, StyleSheet, 
+  Text, View 
 } from 'react-native'
 import React from 'react';
 import { useStripe } from "@stripe/stripe-react-native";
 import { useRouter } from 'expo-router';
 import { supabase } from '@/lib/supabase';
+import * as Linking from "expo-linking"
 
 type Props = {
   paymentIntent: string;
@@ -24,6 +24,7 @@ const StripePayment = ({
 }: Props) => {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const router = useRouter();
+  const returnURL = Linking.createURL("/(tabs)/orders");
   //Initialize payment sheet
   const initializePaymentSheet = async () => {
     const { error } = await initPaymentSheet({
@@ -31,11 +32,12 @@ const StripePayment = ({
       customerId: customer,
       customerEphemeralKeySecret: ephemeralKey,
       merchantDisplayName: 'Shopngo Store',
+      returnURL: returnURL,
     });
     if (error) {
       throw new Error(`Échec de l’initialisation de la feuille de paiement: ${error}`);
     }
-
+  };
     const updatePaymentStatus = async () =>{
       const {error} =  await supabase
         .from("orders")
@@ -70,14 +72,12 @@ const StripePayment = ({
         
       }
     };
-  };
-  return (
-    <View>
-      <Text>StripePayment</Text>
-    </View>
-  );
+  
+  return {
+    handlePayment
+  }
 };
 
-export default StripePayment
+export default StripePayment;
 
 const styles = StyleSheet.create({})

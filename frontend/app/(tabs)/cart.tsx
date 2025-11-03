@@ -67,7 +67,8 @@ const handlePlaceOrder = async () => {
       };
       const response = await axios.post(
         // "http://localhost:8000/checkout",
-        "http://192.168.1.15:8000/checkout",
+        // "http://192.168.1.15:8000/checkout", //maison 
+        "http://192.168.50.11:8000/checkout", //AFPA reseau wifi
         payload, 
         {
           headers: {
@@ -84,8 +85,8 @@ const handlePlaceOrder = async () => {
         //Navigate to PaymentScreen with Stripe data as props
         Toast.show({
           type: "success",
-          text1: "Commande échoué",
-          text2: "Echec de la commande",
+          text1: "Commande passée",
+          text2: "Commande passée avec succés",
           position: "bottom",
           visibilityTime: 2000,
         });
@@ -104,8 +105,8 @@ const handlePlaceOrder = async () => {
   } catch (error) {
     Toast.show({
       type: "error",
-      text1: "Commande passée",
-      text2: "Commande passée avec succés",
+      text1: "Commande echoué",
+      text2: "Echec de la commande",
       position: "bottom",
       visibilityTime: 2000,
     });
