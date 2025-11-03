@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
+import { StripeProvider} from "@stripe/stripe-react-native";
 
 export const unstable_settings = {
   anchor: '(tabs)',
