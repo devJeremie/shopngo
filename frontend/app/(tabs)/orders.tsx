@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { Alert, FlatList, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useAuthStore } from '@/store/authStore'
 import { useRouter } from 'expo-router';
@@ -63,8 +63,23 @@ const OrdersScreen = () => {
     fetchOrders(); 
   }, [user]);
 
-  const handleDeletOrder = () => {
+  const handleDeletOrder = async (orderId:number) => {
+    try {
+      if (!user) {
+        throw new Error("User non connecté");
+      }
+      //Verify the order exists
+      const { data: order, error: fetchError } = await supabase
+        .from("orders")
+        .select("id,user_email")
+        .eq("id", orderId)
+        .single();
 
+        
+    } catch (error) {
+      console.error("Erreur dans la suppressin de commande:", error);
+      Alert.alert("Error","Echec lors de la suppression, Réssayez encore.");
+    }
   };
 
   if(error) {
@@ -82,9 +97,18 @@ const OrdersScreen = () => {
     <Wrapper>
       <Title>Mes commandes</Title>
       {orders?.length > 0 ? (
-        <FlatList  data={orders} keyExtractor={(item) => item.id.toString()}
-          renderItem={({item}) => <OrderItem order={item}
-          email={user?.email} onDelete={handleDeletOrder}/>}
+        <FlatList  
+          data={orders}
+          contentContainerStyle={{marginTop: 10, paddingBottom: 10}}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({item}) => (
+            <OrderItem 
+              order={item}
+              email={user?.email} 
+              onDelete={handleDeletOrder}
+            />
+          )}
+          showsHorizontalScrollIndicator={false}
         />
       ):( 
         <EmptyState 

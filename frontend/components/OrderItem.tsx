@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react';
 import { AppColors } from '@/constants/theme';
+import { Feather } from '@expo/vector-icons';
 
 interface Order {
     id: number;
-    total_Price: number;
+    total_price: number;
     payment_status: string;
     created_at: string;
     items: {
@@ -25,9 +26,65 @@ interface Props {
 const OrderItem = ({order, onDelete, email}: Props) => {
     const isPaid = order?.payment_status === "success"; //verifier que jai bien mis success et pas succes
     const [loading, setLoading] = useState(false);
+
+    const handlePayNow = async () => {
+
+    };
+    const handleDelete = () => {
+        Alert.alert(
+            "Supprimer la commande",
+            `Etes-vous sur de vouloir supprimer la commande #${order?.id}?`,
+            [{
+                text: "Annuler",
+                style: "cancel",
+            },
+            {
+                text: "Supprimer", 
+                style: "destructive", 
+                onPress: () => onDelete(order?.id),
+            }]
+        );
+    };
+
   return (
-    <View>
-      <Text>OrderItem</Text>
+    <View style={styles.orderView}>
+        <View style={styles.orderItem}>
+            <Text style={styles.orderId}>Commande #{order?.id}</Text>
+            <Text>Total: €{order?.total_price.toFixed(2)}</Text>
+            <Text style={[
+                styles.orderStatus,
+                {color: isPaid ? AppColors.success : AppColors.error},
+            ]}>
+                Statut: {isPaid ? "Paiement effectué" : "En attente"}
+            </Text>
+            <Text style={styles.orderDate}>Passée le: 
+                {new Date(order.created_at).toLocaleDateString()}
+            </Text>
+            {!isPaid && (
+                <TouchableOpacity onPress={handlePayNow} style={styles.payNowButton}>
+                    {loading ? (
+                        <ActivityIndicator 
+                            size="small"
+                            color={AppColors.background.primary}
+                        /> 
+                    ): (
+                        <Text style={styles.payNowText}>Payer</Text>
+                    )}
+                </TouchableOpacity>
+            )}
+        </View>
+        {order?.items[0]?.image && (
+            <Image source={{ uri: order?.items[0]?.image }}
+                style={styles.image}
+            />
+        )}
+        <TouchableOpacity  onPress={handleDelete} style={styles.deleteButton}>
+            <Feather 
+                name="trash-2" 
+                color={AppColors.error}
+                size={20}
+            />
+        </TouchableOpacity>
     </View>
   )
 }
@@ -35,7 +92,57 @@ const OrderItem = ({order, onDelete, email}: Props) => {
 export default OrderItem
 
 const styles = StyleSheet.create({
-    
+    orderView: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 12,
+        backgroundColor: AppColors.background.primary,
+        padding: 16,
+        borderRadius: 8,
+        shadowColor: "#000",
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 1,
+        borderWidth: 1,
+        borderColor: AppColors.gray[200],
+    },
+    orderItem:{
+        flex: 1,
+    },
+    orderId: {
+        fontFamily: 'Inter-Bold',
+        fontSize: 16,
+        color: AppColors.text.primary,
+        marginBottom: 4,
+    },
+    orderTotal: {
+        fontFamily: "Inter-Medium",
+        fontSize: 16,
+        color: AppColors.text.primary,
+        marginBottom: 4,
+    },
+    orderStatus: {
+        fontFamily: "Inter-Regular",
+        fontSize: 14,
+        color: AppColors.text.secondary,
+        marginBottom: 4
+    },
+    orderDate: {
+        fontFamily: "Inter-Regular",
+        fontSize: 12,
+        color: AppColors.text.secondary
+    },
+    image: {
+        width: 80,
+        height: 80,
+        resizeMode: "contain",
+        marginLeft: 12,
+    },
+    deleteButton: {
+        padding: 8,
+        marginLeft: 12,
+    },
     payNowButton: {
         marginTop: 8, 
         backgroundColor: AppColors.primary[500],
@@ -43,11 +150,12 @@ const styles = StyleSheet.create({
         width: 80,
         borderRadius: 4,
         alignSelf: 'flex-start',
+        // justifyContent: 'center',
         alignItems: 'center'
     },
     payNowText: {
         fontFamily: 'Inter-Medium',
-        color: "#fff",
+        color: AppColors.background.primary,
         fontSize: 14,
     }
 })
