@@ -4,7 +4,9 @@ import { useAuthStore } from '@/store/authStore'
 import { useRouter } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 import Wrapper from '@/components/Wrapper';
-import TitleHeader from '@/components/TitleHeader';
+import { AppColors } from '@/constants/theme';
+import { Title } from '@/components/customText';
+import EmptyState from '@/components/EmptyState';
 
 interface Order {
   id: number;
@@ -60,21 +62,52 @@ const OrdersScreen = () => {
     fetchOrders(); 
   }, [user]);
 
-  if(!error) {
+  if(error) {
     return (
       <Wrapper>
-        <TitleHeader title= "Mes Commandes"/>
+        <Title>Mes Commandes</Title>
+        <View style={styles.erroContainer}>
+          <Text style={styles.errorText}>Erreur</Text>
+        </View>
       </Wrapper>
     )
   }
 
   return (
     <Wrapper>
-      <Text>Mes commandes</Text>
+      <Title>Mes commandes</Title>
+      {orders?.length > 0 ? (
+        <View>
+          <Text>Commandes</Text>
+        </View> 
+      ):( 
+        <EmptyState 
+          type="cart" 
+          message="Voous n'avez pas de commandes" 
+          actionLabel='Commencez le shopping' 
+          onAction={() => router.push("/(tabs)/shop")} 
+        />
+      )}
     </Wrapper>
   )
 }
 
 export default OrdersScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  erroContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  errorText: {
+    fontFamily: "Inter-Regular",
+    fontSize: 16,
+    color: AppColors.error,
+    textAlign: "center",
+  },
+  listContainer: {
+    paddingVertical: 16,
+  }
+})
