@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { FlatList, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useAuthStore } from '@/store/authStore'
 import { useRouter } from 'expo-router';
@@ -7,6 +7,7 @@ import Wrapper from '@/components/Wrapper';
 import { AppColors } from '@/constants/theme';
 import { Title } from '@/components/customText';
 import EmptyState from '@/components/EmptyState';
+import OrderItem from '@/components/OrderItem';
 
 interface Order {
   id: number;
@@ -62,6 +63,10 @@ const OrdersScreen = () => {
     fetchOrders(); 
   }, [user]);
 
+  const handleDeletOrder = () => {
+
+  };
+
   if(error) {
     return (
       <Wrapper>
@@ -77,9 +82,10 @@ const OrdersScreen = () => {
     <Wrapper>
       <Title>Mes commandes</Title>
       {orders?.length > 0 ? (
-        <View>
-          <Text>Commandes</Text>
-        </View> 
+        <FlatList  data={orders} keyExtractor={(item) => item.id.toString()}
+          renderItem={({item}) => <OrderItem order={item}
+          email={user?.email} onDelete={handleDeletOrder}/>}
+        />
       ):( 
         <EmptyState 
           type="cart" 
