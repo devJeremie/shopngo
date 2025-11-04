@@ -4,6 +4,7 @@ import { useAuthStore } from '@/store/authStore'
 import { useRouter } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 import Wrapper from '@/components/Wrapper';
+import TitleHeader from '@/components/TitleHeader';
 
 interface Order {
   id: number;
@@ -58,6 +59,14 @@ const OrdersScreen = () => {
   useEffect(() => {
     fetchOrders(); 
   }, [user]);
+
+  if(!error) {
+    return (
+      <Wrapper>
+        <TitleHeader title= "Mes Commandes"/>
+      </Wrapper>
+    )
+  }
 
   return (
     <Wrapper>
