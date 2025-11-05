@@ -9,6 +9,7 @@ import { Title } from '@/components/customText';
 import EmptyState from '@/components/EmptyState';
 import OrderItem from '@/components/OrderItem';
 import Toast from 'react-native-toast-message';
+import Loader from '@/components/Loader';
 
 interface Order {
   id: number;
@@ -102,6 +103,10 @@ const OrdersScreen = () => {
       Alert.alert("Error","Echec lors de la suppression, Réssayez encore.");
     }
   };
+
+  if (loading) {
+    return <Loader />
+  }
 
   if(error) {
     return (

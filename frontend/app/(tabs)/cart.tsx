@@ -67,8 +67,8 @@ const handlePlaceOrder = async () => {
       };
       const response = await axios.post(
         // "http://localhost:8000/checkout",
-        // "http://192.168.1.15:8000/checkout", //maison 
-        "http://192.168.50.11:8000/checkout", //AFPA reseau wifi
+        "http://192.168.1.15:8000/checkout", //maison 
+        // "http://192.168.50.11:8000/checkout", //AFPA reseau wifi
         payload, 
         {
           headers: {

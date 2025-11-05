@@ -26,9 +26,23 @@ interface Props {
 const OrderItem = ({order, onDelete, email}: Props) => {
     const isPaid = order?.payment_status === "success"; //verifier que jai bien mis success et pas succes
     const [loading, setLoading] = useState(false);
+     const [disable, setDisable] = useState(false);
 
     const handlePayNow = async () => {
-
+        setLoading(true);
+        setDisable(true);
+        const payload = {
+            price: order?.total_price,
+            email: email,
+        };
+        try {
+            
+        } catch (error) {
+            
+        }finally {
+            setLoading(false);
+            setDisable(false);
+        }
     };
     const handleDelete = () => {
         Alert.alert(
@@ -61,7 +75,10 @@ const OrderItem = ({order, onDelete, email}: Props) => {
                 {new Date(order.created_at).toLocaleDateString()}
             </Text>
             {!isPaid && (
-                <TouchableOpacity onPress={handlePayNow} style={styles.payNowButton}>
+                <TouchableOpacity 
+                    disabled={disable}
+                    onPress={handlePayNow} 
+                    style={styles.payNowButton}>
                     {loading ? (
                         <ActivityIndicator 
                             size="small"
@@ -78,7 +95,9 @@ const OrderItem = ({order, onDelete, email}: Props) => {
                 style={styles.image}
             />
         )}
-        <TouchableOpacity  onPress={handleDelete} style={styles.deleteButton}>
+        <TouchableOpacity 
+            onPress={handleDelete} 
+            style={styles.deleteButton}>
             <Feather 
                 name="trash-2" 
                 color={AppColors.error}
