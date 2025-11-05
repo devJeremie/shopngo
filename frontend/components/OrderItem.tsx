@@ -2,6 +2,9 @@ import { ActivityIndicator, Alert, Image, StyleSheet, Text, TouchableOpacity, Vi
 import React, { useState } from 'react';
 import { AppColors } from '@/constants/theme';
 import { Feather } from '@expo/vector-icons';
+import axios from 'axios';
+import { BASE_URL } from '@/config';
+import { useRouter } from 'expo-router';
 
 interface Order {
     id: number;
@@ -21,12 +24,14 @@ interface Props {
     order:Order;
     onDelete: (id:number)=>void;
     email: string | undefined;
+    onViewDetails: (order:Order)=>void;
 }
 
-const OrderItem = ({order, onDelete, email}: Props) => {
+const OrderItem = ({order, onDelete, email, onViewDetails}: Props) => {
     const isPaid = order?.payment_status === "success"; //verifier que jai bien mis success et pas succes
     const [loading, setLoading] = useState(false);
-     const [disable, setDisable] = useState(false);
+    const [disable, setDisable] = useState(false);
+    const router = useRouter();
 
     const handlePayNow = async () => {
         setLoading(true);
@@ -36,7 +41,28 @@ const OrderItem = ({order, onDelete, email}: Props) => {
             email: email,
         };
         try {
-            
+           const response = await axios.post(`${BASE_URL}/checkout`,
+            payload,{
+                headers: { "Content-Type": "application/json" },
+            });
+             const {paymentIntent, ephemeralKey, customer }=response.data;
+            //  console.log(paymentIntent, ephemeralKey, customer);
+             if (response?.data) {
+                Alert.alert("Payer maintenant", `Initiation du paiment pour la commande #${order?.id}`, [
+                    {text: "Annuler"},
+                    {text: "Payer", onPress: ()=>{
+                        router.push({
+                            pathname: "/(tabs)/payment",
+                            params: {
+                                paymentIntent, ephemeralKey,
+                                customer,
+                                orderId: order?.id,
+                                total: order?.total_price,
+                            }
+                        })
+                    }},
+                ])
+             }
         } catch (error) {
             
         }finally {
@@ -74,11 +100,19 @@ const OrderItem = ({order, onDelete, email}: Props) => {
             <Text style={styles.orderDate}>Passée le: 
                 {new Date(order.created_at).toLocaleDateString()}
             </Text>
-            {!isPaid && (
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity 
+                    onPress={() => onViewDetails(order)}
+                    style={styles.viewDetailsButton}
+                >
+                    <Text style={styles.viewDetailsText}>Détails</Text>
+                </TouchableOpacity>
+                {!isPaid && (
                 <TouchableOpacity 
                     disabled={disable}
                     onPress={handlePayNow} 
-                    style={styles.payNowButton}>
+                    style={styles.payNowButton}
+                >
                     {loading ? (
                         <ActivityIndicator 
                             size="small"
@@ -89,6 +123,7 @@ const OrderItem = ({order, onDelete, email}: Props) => {
                     )}
                 </TouchableOpacity>
             )}
+            </View>
         </View>
         {order?.items[0]?.image && (
             <Image source={{ uri: order?.items[0]?.image }}
@@ -176,5 +211,27 @@ const styles = StyleSheet.create({
         fontFamily: 'Inter-Medium',
         color: AppColors.background.primary,
         fontSize: 14,
-    }
+    },
+    buttonContainer: {
+        flexDirection: "row",
+        alignItems: 'center',
+        justifyContent: "flex-start",
+        gap: 12,
+        marginTop: 8,
+    },
+    viewDetailsText: {
+        fontFamily: "Inter-Medium",
+        color: "#fff",
+        fontSize: 14,
+    },
+    viewDetailsButton: {
+        backgroundColor: AppColors.primary[600],
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2},
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        }
 })
