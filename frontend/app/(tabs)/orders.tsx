@@ -8,6 +8,7 @@ import { AppColors } from '@/constants/theme';
 import { Title } from '@/components/customText';
 import EmptyState from '@/components/EmptyState';
 import OrderItem from '@/components/OrderItem';
+import Toast from 'react-native-toast-message';
 
 interface Order {
   id: number;
@@ -75,7 +76,27 @@ const OrdersScreen = () => {
         .eq("id", orderId)
         .single();
 
+        if (fetchError || !order) {
+          throw new Error("Commmande non trouvée");
+        }
         
+        //Perform the deletion
+        const { error } = await supabase
+          .from("orders")
+          .delete()
+          .eq("id", orderId);
+
+          if (error) {
+            throw new Error(`Echec de suppression de commande:${error?.message}`);
+          }
+          fetchOrders();
+          Toast.show({
+            type: "success",
+            text1: "Commande supprimé",
+            text2: `La commande #${orderId} à été supprimé`,
+            position: "bottom",
+            visibilityTime: 2000,
+          });
     } catch (error) {
       console.error("Erreur dans la suppressin de commande:", error);
       Alert.alert("Error","Echec lors de la suppression, Réssayez encore.");
