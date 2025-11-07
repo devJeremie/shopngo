@@ -1,4 +1,8 @@
-import { AppRegistry, Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, Image,
+   ScrollView, StyleSheet,
+    Text, TouchableOpacity,
+    View
+} from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { AppColors } from '@/constants/theme';
 import { useLocalSearchParams, useRouter } from 'expo-router';
