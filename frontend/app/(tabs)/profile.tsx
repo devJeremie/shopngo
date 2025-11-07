@@ -73,7 +73,7 @@ const ProfileScreen = () => {
       ),
       title: "Adresse de livraison",
       onPress: () => {
-         router.push("/(tabs)/delivery_address");
+         router.push("/(tabs)/deliveryAddress");
       },
     },
     {
