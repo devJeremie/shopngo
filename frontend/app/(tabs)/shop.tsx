@@ -15,15 +15,15 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import EmptyState from '@/components/EmptyState';
 import ProductCard from '@/components/ProductCard';
 
-
-
+// Composant principal pour afficher la liste des produits du magasin
 const ShopScreen = () => {
+  // Récupération des paramètres de recherche et catégorie dans l'URL
   const {q:searchParam,category:categoryParam} = useLocalSearchParams<{
     q?:string; 
     category?:string
   }>();
   console.log(categoryParam);
-
+  // Extraction des méthodes et états du store produit (zustand ou autre)
   const {
     filteredProducts, 
     selectedCategory, loading, 
@@ -32,11 +32,16 @@ const ShopScreen = () => {
     fetchCategories, categories,
     products,
   } = useProductStore();
-  
+  // État local pour afficher/masquer la modal de tri
   const [showShortModal, setShowShortModal] = useState(false);
+  // État pour indiquer l'option de tri active (prix, note...)
   const [activeSortOption, setActiveSortOption] = useState<string | null>(null);
+   // État pour savoir si un filtre est actif ou non
   const [isFilterActive, setIsFilterActive] = useState(false);
 
+  // Hook d'effet appelé au montage du composant :
+  // - Récupération des catégories et produits via le store
+  // - Initialisation de la catégorie sélectionnée si spécifiée dans les params
   useEffect(() => {
     fetchCategories();
     fetchProducts();
@@ -45,14 +50,20 @@ const ShopScreen = () => {
     }
   }, []);
   console.log(loading);
-  
+    // Hook pour navigation entre écrans
     const router = useRouter();
 
+  // Rendu de l'en-tête de la page avec :
+  // - Le titre
+  // - La barre de recherche naviguant vers l'écran recherche
+  // - Un bouton pour ouvrir la modal de tri
+  // - La liste horizontale des catégories sous forme de boutons
   const renderHeader = () => {
     return (
       <View style={styles.header}>
         <Text style={styles.title}>Tous les produits</Text>
         <View style={{flexDirection: 'row', width: '100%'}}>
+
           <TouchableOpacity 
             style={styles.searchRow}
             onPress={() => router.push("/(tabs)/search")}
@@ -71,6 +82,7 @@ const ShopScreen = () => {
               color="white"
             />
           </View>
+
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={ () => setShowShortModal(true)}
@@ -91,6 +103,7 @@ const ShopScreen = () => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.categoriesContainer}
         >
+          {/* Bouton "Tous" pour réinitialiser la catégorie */}
           <TouchableOpacity 
             style={[
               styles.categoryButton,
@@ -107,6 +120,7 @@ const ShopScreen = () => {
             Tous
             </Text>
           </TouchableOpacity>
+           {/* Boutons pour chaque catégorie disponible */}
           {categories?.map((category) =>(
             <TouchableOpacity 
               onPress={() => setCategory(category)}
@@ -130,7 +144,7 @@ const ShopScreen = () => {
       </View>
     );
   };
-  
+  // Gestion du cas d'erreur dans la récupération des produits
   if (error) {
     return (
       <Wrapper>
@@ -141,19 +155,29 @@ const ShopScreen = () => {
     );
   }
   //sortBY rappelez vous le productStore price-asc price desc rating on a fait le switch case
+  // Gestion du tri des produits selon un critère donné
   const handleSort= (sortBy: "price-asc" | "price-desc" | "rating") => {
+    // Appliquer le tri dans le store
     sortProducts(sortBy);
+    // Mémoriser l'option de tri active
     setActiveSortOption(sortBy);
+    // Fermer la modal de tri
     setShowShortModal(false);
+    // Activer le filtre visuel
     setIsFilterActive(true);
   };
+  // Réinitialisation des filtres et tri
   const handleResetFilter = () => {
+    // Tri par défaut (prix croissant)
     sortProducts("price-asc");
+    // Aucune option de tri active
     setActiveSortOption(null);
+    // Fermer la modal
     setShowShortModal(false);
+    // Désactiver l'indicateur de filtre
     setIsFilterActive(false);
   };
-
+  // Rendu principal du composant
   return (
     <Wrapper>
       {renderHeader()}
@@ -168,6 +192,7 @@ const ShopScreen = () => {
         />
       ) : ( 
         <FlatList 
+          // Liste des produits filtrés à afficher
           data={filteredProducts}
           keyExtractor={(item) => item.id.toString()}
           numColumns={2}
@@ -238,6 +263,7 @@ const ShopScreen = () => {
                  Meilleur note
               </Text>
             </TouchableOpacity>
+             {/* Bouton visible uniquement si un filtre est actif */}
             {isFilterActive && (
               <TouchableOpacity 
                 style={styles.sortOption}
