@@ -7,16 +7,21 @@ import { AppColors } from '@/constants/theme';
 import Wrapper from '@/components/Wrapper';
 import ProductCard from '@/components/ProductCard';
 import EmptyState from '@/components/EmptyState';
-
+// Composant React Native affichant la liste des produits favoris de l'utilisateur.
 const FavoritesScreen = () => {
+  // Hook de navigation pour gérer la redirection entre les écrans.
   const router = useRouter();
+  // Récupération du store des favoris :
+  // - favoriteItems : ensemble des produits ajoutés aux favoris
+  // - resetFavorite : fonction pour vider la liste des favoris
   const { favoriteItems, resetFavorite } = useFavoritesStore();
   // console.log(favoriteItems);
 
+  // Fonction de redirection vers la page boutique.
   const navigateToProducts = () => {
     router.push("/(tabs)/shop")
   }
-
+  // Affichage d'un état vide si l'utilisateur n'a aucun produit en favori.
   if(favoriteItems?.length === 0 ) {
     return <Wrapper>
       <HomeHeader />
@@ -24,22 +29,25 @@ const FavoritesScreen = () => {
         type="favorites"
         message="Vous n'avez pas ajouté de produits a vos favoris"
         actionLabel='Voir les produits'
+        // Redirection bouton "Voir les produits"
         onAction={navigateToProducts}
       />
     </Wrapper>
   }
-
+  // Si la liste des favoris contient des éléments, on les affiche ici.
   return (
     <View style={{flex: 1}}>
       <HomeHeader />
         {favoriteItems?.length > 0 && (
         <Wrapper>
+           {/* En-tête affichant le titre et le nombre de favoris + bouton de réinitialisation */}
           <View style={styles.headerView}>
             <View style={styles.header}>
               <Text style={styles.title}>Produits favoris</Text>
               <Text style={styles.itemCount}>{favoriteItems?.length} produits</Text>
             </View>
             <View>
+               {/* Bouton pour supprimer tous les favoris */}
               <TouchableOpacity
                 onPress={() => resetFavorite()}
               >
@@ -47,18 +55,27 @@ const FavoritesScreen = () => {
               </TouchableOpacity>
             </View>
           </View>
+           {/* Liste affichant les produits favoris sous forme de grille */}
           <FlatList 
+            // Source de données : les produits favoris
             data={favoriteItems}
+            // Clé unique pour chaque élément
             keyExtractor={(item)=>item.id.toString()}
+            // Deux produits affichés par ligne
             numColumns={2}
             renderItem={({item}) => (
               <View style={styles.productContainer}>
+                {/* Carte produit occupant toute la largeur de sa colonne*/}
                 <ProductCard product={item} customStyle={{width: '100%'}}/>
               </View>
             )}
+            // Style de la grille principale
             contentContainerStyle={styles.productsGrid}
+            // Espacement entre les colonnes
             columnWrapperStyle={styles.columnWrapper}
+            // Masque la barre de défilement
             showsVerticalScrollIndicator={false}
+            // Marge en bas de la liste
             ListFooterComponent={<View style={styles.footer}/>}
           />
         </Wrapper>
