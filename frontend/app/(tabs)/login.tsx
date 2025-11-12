@@ -13,18 +13,20 @@ import TextInput from '@/components/TextInput'
 import Button from '@/components/Button'
 
 const LoginScreen = () => {
-
+  // États locaux pour gérer la saisie utilisateur dans les champs email et mot de passe
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // États séparés pour stocker les messages d'erreur de validation pour chaque champ
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
+  // Hook pour la navigation entre les écrans
   const router = useRouter();
+  // Extraction des fonctions et états du store d'authentification (login, isLoading, erreurs)
   const { login, isLoading, error } = useAuthStore();
-
+    // Fonction de validation du formulaire avant soumission
     const validateForm = () => {
     let isValid = true;
-    //validation email
+    //Validation email
     if(!email.trim()) {
       setEmailError('Email obligatoire');
       isValid = false;
@@ -34,7 +36,7 @@ const LoginScreen = () => {
     } else {
       setEmailError("");
     }
-    //validation mot de passe
+    //Validation mot de passe
     if(!password) {
       setPasswordError('Mot de passe obligatoire');
       isValid = false;
@@ -44,23 +46,26 @@ const LoginScreen = () => {
     } else {
       setPasswordError("");
     }
-
+    // Retourne true si tous les champs sont valides
     return isValid;
   };
-
+  // Fonction déclenchée lors de l'appui sur le bouton de connexion
+  // Valide le formulaire puis lance la fonction login et redirige si succès
   const handleLogin = async () => {
     if (validateForm()) {
       await login(email, password)
       router.push("/(tabs)/profile");
+      // Reset des champs après connexion réussie
       setEmail("");
       setPassword("");
     }
   }
-
+  // Rendu de l'écran de connexion
   return (
     <Wrapper>
       <KeyboardAvoidingView>
         <ScrollView style={styles.scrollContainer}>
+          {/* En-tête avec logo et textes */}
           <View style={styles.header}>
             <View style={styles.logoContainer}>
               <Foundation
@@ -72,8 +77,11 @@ const LoginScreen = () => {
             <Text style={styles.title}>ShopNgo</Text>
             <Text style={styles.subtitle}>Connectez-vous à votre compte</Text>
           </View>
+            {/* Formulaire de connexion */}
              <View style= {styles.form}>
+            {/* Affichage d'une erreur générale venant du store d'authentification */}
             {error && <Text style={styles.errorText}>{error}</Text>}
+            {/* Champ email avec gestion de l'erreur */}
             <TextInput 
               label="Email" 
               value={email} 
@@ -84,6 +92,7 @@ const LoginScreen = () => {
               autoCorrect= {false}
               error={emailError}
             />
+            {/* Champ mot de passe avec gestion de l'erreur */}
             <TextInput 
               label="Mot de passe" 
               value={password} 
@@ -92,6 +101,7 @@ const LoginScreen = () => {
               error={passwordError}
               secureTextEntry
             />
+            {/* Bouton de connexion avec indicateur de chargement */}
             <Button
               onPress={handleLogin}
               title="Connexion"
