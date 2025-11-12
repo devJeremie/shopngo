@@ -3,9 +3,11 @@ import { Dimensions, Image,
     Text, TouchableOpacity,
     View
 } from 'react-native'
+// Hooks React, couleurs du thème, navigation Expo Router
 import React, { useEffect, useState } from 'react';
 import { AppColors } from '@/constants/theme';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+// Importation des composants et types de l'app
 import CommonHeader from '@/components/CommonHeader';
 import { Product } from '@/type';
 import { getProduct } from '@/lib/api';
@@ -17,22 +19,25 @@ import { AntDesign } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import { useCartStore } from '@/store/cartStore';
 import { useFavoritesStore } from '@/store/favoriteStore';
-
+// Récupération de la largeur de l’écran pour les styles responsifs
 const {width} = Dimensions.get("window");
-
+// Définition du composant principal de la fiche produit
 const SingleProductScreen = () => {
+  // Récupère l’id du produit via les paramètres de navigation
   const {id} = useLocalSearchParams<{ id: string }>();
+   // States locaux : produit, loading, erreur et quantité à acheter
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
+  // Conversion de l’id en nombre
   const idNum = Number(id);
-
+  // Accès aux méthodes du panier et des favoris via les stores
   const { addItem} = useCartStore();
   const { isFavorite ,toggleFavorite} = useFavoritesStore();
-
+  // Récupère l’objet router pour naviguer ou revenir en arrière
   const router = useRouter();
-
+  // Effet pour charger le produit dès que l’id change
   useEffect(() => {
     const fetchProductData = async () => {
       setLoading(true);
@@ -50,8 +55,10 @@ const SingleProductScreen = () => {
     if (id) {
       fetchProductData();
     }
+  // Recharge le produit quand l'id change
   }, [id]);  
   // console.log('Product data:', product);
+  // Affichage spinner de chargement si la requête est en cours
   if (loading) {
     return (
     <View style={{flex: 1, alignItems:'center', justifyContent: 'center'}}>
@@ -59,6 +66,7 @@ const SingleProductScreen = () => {
     </View>
     );
   }
+  // Affiche un message d'erreur si le produit n’existe pas ou en cas d’échec
   if (error || !product) {
     return (
       <View style={styles.errorContainer}>
@@ -71,7 +79,9 @@ const SingleProductScreen = () => {
       </View>
     );
   }
+  // Vérifie si le produit est en favori
   const isFav = isFavorite(product?.id);
+  // Handler ajout au panier : ajoute avec la quantité choisie et affiche une notification
   const handleAddToCart = () => {
     addItem(product, quantity);
       Toast.show({
@@ -81,16 +91,19 @@ const SingleProductScreen = () => {
         visibilityTime: 2000,
       });
   };
+  // Handler ajout/retrait favoris
   const handleToggleFavorite = () => {
     if (product) {
       toggleFavorite(product);
     }
   }
-
+  // Rendu du composant principal
   return (
     <View style={styles.headerContainerStyle}>
+        {/* Header avec bouton favori */}
         <CommonHeader isFav={isFav} handleToggleFavorite={handleToggleFavorite}/>
         <ScrollView showsVerticalScrollIndicator= {false}>
+           {/* Affichage image produit */}
           <View style={styles.imageContainer}>
             <Image 
               source={{uri: product?.image}}
@@ -98,6 +111,7 @@ const SingleProductScreen = () => {
               resizeMode='contain'
             />
           </View>
+            {/* Infos produit : catégorie, titre, note, prix, description */}
           <View style={styles.productInfo}>
             <Text style={styles.category}>
               {product?.category?.charAt(0).toUpperCase() + product?.category?.slice(1)}
@@ -113,6 +127,7 @@ const SingleProductScreen = () => {
             <View style={styles.divider}/>
             <Text style={styles.descriptionTitle}>Description</Text>
             <Text style={styles.description}>{product?.description}</Text>
+              {/* Gestion de la quantité à acheter */}
             <View style={styles.quantityContainer}>
               <Text style={styles.quantityTitle}>Quantité</Text>
               <View style={styles.quantityControls}>
@@ -146,6 +161,7 @@ const SingleProductScreen = () => {
             </View>
           </View>
         </ScrollView>
+         {/* Footer : bouton ajout panier et affichage du total */}
         <View style={styles.footer}>
           <Text style={styles.totalPrice}>Total: €{(product?.price * quantity).toFixed(2)}</Text>
           <Button 
