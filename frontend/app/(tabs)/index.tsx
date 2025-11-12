@@ -42,7 +42,7 @@ export default function HomeScreen() {
       setFeaturedProducts(reverseProducts as Product[]);
     }
  }, [products]);
-
+// Fonction pour naviguer vers la page boutique avec une catégorie sélectionnée en paramètre
 const navigateToCategory = (category: string) => {
   router.push({
     pathname: '/(tabs)/shop',
@@ -51,8 +51,8 @@ const navigateToCategory = (category: string) => {
     },
   });
  }
-
- if(loading) {
+// Affichage pendant le chargement : spinner plein écran
+if(loading) {
   return(
      <SafeAreaView style={styles.container}>
       <View style={styles.errorContainer}>
@@ -61,8 +61,9 @@ const navigateToCategory = (category: string) => {
     </SafeAreaView>
      
   );
- }
- if (error) {
+}
+// Affichage en cas d'erreur lors de la récupération des données
+if (error) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.errorContainer}>
@@ -70,19 +71,25 @@ const navigateToCategory = (category: string) => {
       </View>
     </SafeAreaView>
   )
- }
+}
+  // Rendu principal du composant
   return (
     <View style={styles.wrapper}>
+      {/* En-tête personnalisé de la page */}
       <HomeHeader />
+      {/* Conteneur principal défilable */}
       <View style={styles.contentContainer}>
         <ScrollView 
           showsVerticalScrollIndicator={false} 
           contentContainerStyle={styles.scrollContainerView}
         >
+           
+           {/* Section des catégories de produits */}
           <View style={styles.categoriesSection}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Catégories</Text>
             </View>
+            {/* Scroll horizontal des catégories */}
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -105,6 +112,7 @@ const navigateToCategory = (category: string) => {
               ))}
             </ScrollView>
           </View>
+          {/* Section des produits "Meilleurs Ventes" */}
           <View style={styles.featuredSection}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Meilleurs Ventes</Text>
@@ -113,6 +121,7 @@ const navigateToCategory = (category: string) => {
                   <Text style={styles.seeAllText}>Voir tout</Text>
                 </TouchableOpacity>
             </View>
+            {/* Liste horizontale des produits vedettes */}
             <FlatList 
               data={featuredProducts}
               keyExtractor={(item) => item.id.toString()}
@@ -134,6 +143,7 @@ const navigateToCategory = (category: string) => {
                 <Text style={styles.seeAllText}>Voir Tout</Text>
               </TouchableOpacity>
             </View>
+            {/* Grille des produits récents */}
             <View style={styles.productsGrid}>
               {products?.map((product) => (
                 <View key={product.id} style={styles.productContainer}>
