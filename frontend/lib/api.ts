@@ -1,7 +1,7 @@
 import { Product } from "@/type";
 
 const API_URL = "https://fakestoreapi.com";
-
+//#region All Product
 //All products
 // Récupérer tous les produits
 const getProducts = async (): Promise<Product[]> => {
@@ -20,7 +20,9 @@ const getProducts = async (): Promise<Product[]> => {
         throw error;
     }
 };
+//#endregion
 
+//#region Single Product
 // Single Product
 // Récupère un produit unique par son identifiant (id)
 export const getProduct = async (id:number): Promise<Product> => {
@@ -41,7 +43,9 @@ export const getProduct = async (id:number): Promise<Product> => {
         throw error;
     }
 };
+//#endregion
 
+//#region All Category
 //All Categories
 // Récupère toutes les catégories de produits disponibles
 const getCategories = async (): Promise<string[]> => {
@@ -61,6 +65,9 @@ const getCategories = async (): Promise<string[]> => {
         throw error;
     }
 };
+//#endregion
+
+//#region Product By Id
 // Récupère les produits appartenant à une catégorie spécifique
 const getProductsByCategory = async ( category: string ): Promise<Product[]> => {
     try {
@@ -79,6 +86,9 @@ const getProductsByCategory = async ( category: string ): Promise<Product[]> => 
         throw error;
     }
 };
+//#endregion
+
+//#region Product Search
 // Recherche des produits dont le titre, la description ou la catégorie correspondent à un terme donné
 const searchProductsApi = async (query: string): Promise<Product[]> => {
     try {
@@ -106,6 +116,7 @@ const searchProductsApi = async (query: string): Promise<Product[]> => {
         throw error;
     }
 };
+//#endregion
 
 // Export des fonctions pour qu'elles soient utilisables dans d'autres modules
 export { getProducts, getCategories, getProductsByCategory, searchProductsApi };

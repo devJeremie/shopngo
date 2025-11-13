@@ -18,7 +18,7 @@ interface ProductsState {
     error: string | null;   
     selectedCategory: string | null;                        //Message d'erreur, s'il y en a
 //Action to fetch products
-    //Méthode pour récupérer les produoits depuis l'API
+    //Méthode pour récupérer les produits depuis l'API
     fetchProducts: () => Promise<void>;
     //Méthode pour récupérer les catégories depuis l'API
     fetchCategories: () => Promise<void>;
