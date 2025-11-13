@@ -69,7 +69,7 @@ export default HomeHeader
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'AppColors.background.primary',
+        backgroundColor: AppColors.background.primary,
         marginTop: Platform.OS === 'android' ? 35 : 0,
     },
     header:{
