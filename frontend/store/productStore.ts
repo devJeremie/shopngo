@@ -16,7 +16,7 @@ interface ProductsState {
     categories: string[];                           //Liste des catégories de produits disponibles
     loading: boolean;                               //Indicateur de chargement
     error: string | null;   
-    selectedCategory: string | null;                        //Message d'erreur, s'il y en a
+    selectedCategory: string | null;                //Message d'erreur, s'il y en a
 //Action to fetch products
     //Méthode pour récupérer les produits depuis l'API
     fetchProducts: () => Promise<void>;
