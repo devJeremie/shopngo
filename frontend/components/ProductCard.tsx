@@ -50,7 +50,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             // position: 'bottom',
             
         });
-        // Alert.alert(`Produit ${title} ajouté au panier`);
+        //Alert.alert(`Produit ${title} ajouté au panier`);
     };
     const handleToggleFavorite = () => {
         toggleFavorite(product);
