@@ -38,7 +38,7 @@ export const getProduct = async (id:number): Promise<Product> => {
         return await response.json();
     } catch (error) {
         // Affiche une erreur dans la console en indiquant l'id du produit concerné
-        console.error('Error fetching product with id ${id}:', error);
+        console.error(`Error fetching product with id ${id}:`, error);
         // Relance l'erreur pour être gérée ailleurs
         throw error;
     }
