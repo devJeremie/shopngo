@@ -6,6 +6,7 @@ import {
 // Importation du client Supabase et des modules nécessaires
 import { createClient } from "@supabase/supabase-js";
 import * as SecureStore from "expo-secure-store";
+
 import { Platform } from "react-native";
 
 // Implémentation d'un adaptateur de stockage personnalisé pour SecureStore
