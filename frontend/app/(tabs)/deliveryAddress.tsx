@@ -52,13 +52,15 @@ const DeliveryAdressScreen: React.FC = () => {
     }, [user]);
     // Fonction déclenchée lors du clic sur le bouton "Ajouter l'adresse".
     const handleAddAddress = async () => {
+        console.log('User:', user?.id, 'OrderId:', orderId); //verification
+        
         // Vérifie s'il y a bien une commande active pour cet utilisateur.
         if (!orderId) {
             Alert.alert("Erreur", "Aucune commande trouvée pour l'ajout d'addresse");
             return;
         }
         // Vérifie que le champ adresse n'est pas vide ou composé uniquement d'espaces.
-        if (!address.trim) {
+        if (!address.trim()) {
             Alert.alert("Validation", "l'adresse ne peut pas être vide");
             return;
         }
