@@ -1,4 +1,8 @@
-import { Alert, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { 
+  Alert, Platform, 
+  StyleSheet, Text, 
+  TouchableOpacity, View 
+} from 'react-native';
 import React, { useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '@/store/authStore';
