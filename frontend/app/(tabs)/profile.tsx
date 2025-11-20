@@ -10,7 +10,7 @@ import { useRouter } from "expo-router";
 import Wrapper from '@/components/Wrapper'; 
 import { AppColors } from '@/constants/theme';
 import Button from '@/components/Button';
-import { Feather, FontAwesome, FontAwesome5, Foundation, MaterialIcons } from '@expo/vector-icons';
+import { Feather, FontAwesome, FontAwesome5, Foundation, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 // Composant écran Profil utilisateur
 const ProfileScreen = () => {
@@ -89,8 +89,8 @@ const ProfileScreen = () => {
     {
      id: 'settings',
       icon:(
-        <Foundation
-          name="home"
+        <Ionicons
+          name="settings"
           size={20}
           color={AppColors.primary[500]}
         />
