@@ -23,6 +23,7 @@ const LoginScreen = () => {
   const router = useRouter();
   // Extraction des fonctions et états du store d'authentification (login, isLoading, erreurs)
   const { login, isLoading, error } = useAuthStore();
+  
     // Fonction de validation du formulaire avant soumission
     const validateForm = () => {
     let isValid = true;
