@@ -78,37 +78,37 @@ const LoginScreen = () => {
             <Text style={styles.subtitle}>Connectez-vous à votre compte</Text>
           </View>
             {/* Formulaire de connexion */}
-             <View style= {styles.form}>
+            <View style= {styles.form}>
             {/* Affichage d'une erreur générale venant du store d'authentification */}
             {error && <Text style={styles.errorText}>{error}</Text>}
             {/* Champ email avec gestion de l'erreur */}
-            <TextInput 
-              label="Email" 
-              value={email} 
-              onChangeText={setEmail}
-              placeholder='Entrez votre Email'
-              keyboardType='email-address' 
-              autoCapitalize='none'
-              autoCorrect= {false}
-              error={emailError}
-            />
-            {/* Champ mot de passe avec gestion de l'erreur */}
-            <TextInput 
-              label="Mot de passe" 
-              value={password} 
-              onChangeText={setPassword}
-              placeholder='Entrez votre mot de passe'
-              error={passwordError}
-              secureTextEntry
-            />
-            {/* Bouton de connexion avec indicateur de chargement */}
-            <Button
-              onPress={handleLogin}
-              title="Connexion"
-              fullWidth
-              loading={isLoading}
-              style={styles.button}
-            />
+              <TextInput 
+                label="Email" 
+                value={email} 
+                onChangeText={setEmail}
+                placeholder='Entrez votre Email'
+                keyboardType='email-address' 
+                autoCapitalize='none'
+                autoCorrect= {false}
+                error={emailError}
+              />
+              {/* Champ mot de passe avec gestion de l'erreur */}
+              <TextInput 
+                label="Mot de passe" 
+                value={password} 
+                onChangeText={setPassword}
+                placeholder='Entrez votre mot de passe'
+                error={passwordError}
+                secureTextEntry
+              />
+              {/* Bouton de connexion avec indicateur de chargement */}
+              <Button
+                onPress={handleLogin}
+                title="Connexion"
+                fullWidth
+                loading={isLoading}
+                style={styles.button}
+              />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
