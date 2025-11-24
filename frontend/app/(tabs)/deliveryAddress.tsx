@@ -68,8 +68,12 @@ const DeliveryAdressScreen: React.FC = () => {
         console.log('User:', user?.id, 'OrderId:', orderId); //verification
         
         // Vérifie s'il y a bien une commande active pour cet utilisateur.
-        if (!orderId) {
-            Alert.alert("Erreur", "Aucune commande trouvée pour l'ajout d'addresse");
+        // if (!orderId) {
+        //     Alert.alert("Erreur", "Aucune commande trouvée pour l'ajout d'addresse");
+        //     return;
+        // }
+        if (!user?.email) {
+            Alert.alert("Erreur", "Utilisateur non connecté");
             return;
         }
         // Vérifie que le champ adresse n'est pas vide ou composé uniquement d'espaces.
@@ -79,11 +83,11 @@ const DeliveryAdressScreen: React.FC = () => {
         }
         // Indicateur de chargement activé.
         setLoading(true);
-        // Mise à jour de la commande avec la nouvelle adresse de livraison.
+        // Mise à jour de toutes les commandes avec la nouvelle adresse de livraison.
         const {error} = await supabase
             .from("orders")
             .update({delivery_address: address})
-            .eq("id", orderId);
+            .eq("user_email", user.email);
         // Chargement terminé.
         setLoading(false);
         // Gestion de la réponse de la base de données.

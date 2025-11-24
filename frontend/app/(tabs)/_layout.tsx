@@ -4,7 +4,7 @@ import React from 'react';
 // Import d’un composant personnalisé pour gestion du retour haptique sur les tabs
 import { HapticTab } from '@/components/haptic-tab';
 // Import des icônes utilisées pour les onglets
-import { Ionicons, Foundation, Feather } from '@expo/vector-icons';
+import { Ionicons, Foundation, Feather, MaterialIcons } from '@expo/vector-icons';
 // Couleurs du thème général de l’application
 import { AppColors } from '@/constants/theme';
 import { Colors } from '@/constants/theme';
@@ -56,6 +56,15 @@ export default function TabLayout() {
           title: 'Profile',
           tabBarIcon: ({ color }) => (
             <Feather name="user" size={28} color={color} />
+          ),
+        }}      
+      />
+      <Tabs.Screen
+        name="deliveryAddress"
+        options={{
+          title: 'DeliveryAdress',
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="local-shipping" size={28} color={color} />
           ),
         }}      
       />
