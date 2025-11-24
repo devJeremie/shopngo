@@ -100,7 +100,6 @@ export const useProductStore = create<ProductsState>((set, get) =>
                         product.category.toLowerCase().includes(searchTerm)
                 );
             }
-
             set({ filteredProducts: filtered });
         },
 

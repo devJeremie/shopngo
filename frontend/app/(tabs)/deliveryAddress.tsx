@@ -27,17 +27,30 @@ const DeliveryAdressScreen: React.FC = () => {
             // Démarrage du chargement pendant la requête.
             setLoading(true);
             // Requête vers la table "orders" pour obtenir la dernière commande de l'utilisateur.
+            // const { data, error } = await supabase
+            //     .from("orders")
+            //     .select('id')
+            //     .eq("user_id", user.id)
+            //     // Trie par date de création décroissante.
+            //     .order("created_at", {ascending: false})
+            //     // On ne récupère qu'une seule commande.
+            //     .limit(1)
+            //     // Résultat attendu : un seul objet (et non un tableau).
+            //     .single();
+            // // Fin du chargement.
+            //test avec user.email qui est la colonne d'association qu'on utilise dans la OrdersScreen donc 
+            //logiquement c'est cele ci qu'il faut utiliser ici aussi
             const { data, error } = await supabase
                 .from("orders")
                 .select('id')
-                .eq("user_id", user.id)
+                .eq("user_email", user.email)
                 // Trie par date de création décroissante.
                 .order("created_at", {ascending: false})
                 // On ne récupère qu'une seule commande.
                 .limit(1)
                 // Résultat attendu : un seul objet (et non un tableau).
                 .single();
-            // Fin du chargement.
+
             setLoading(false);
             // Gestion des erreurs ou mise à jour du state selon la réponse.
             if (error) {
