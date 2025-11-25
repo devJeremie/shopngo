@@ -283,7 +283,6 @@ const ShopScreen = () => {
   );
 };
 
-
 export default ShopScreen;
 
 const styles = StyleSheet.create({
