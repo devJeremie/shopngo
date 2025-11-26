@@ -11,15 +11,19 @@ import ProductCard from '@/components/ProductCard'
 
 
 const SearchScreen = () => {
+  // State local pour le texte de recherche
   const [searchQuery, setSearchQuery] = useState("");
+   // Référence pour gérer le timeout lors de la saisie
+   //  pour éviter les requêtes trop fréquentes
   const searchTimeOutRef = useRef<number | null>(null);
+  // Récupération des données et fonctions du store produit via Zustand
   const {
     filteredProducts, error,
     loading, fetchProducts, 
     searchProductsRealTime,
-     
   } = useProductStore();
 
+  // Effet pour nettoyer le timeout lors du démontage du composant
   useEffect(() => {
   //   if (filteredProducts?.length === 0) {
   //     fetchProducts();
@@ -31,26 +35,29 @@ const SearchScreen = () => {
       }
     };
   }, [])
-
+  // Gestion du changement dans le champ de recherche
   const handleSearchChange = (text: string) => {
     setSearchQuery(text);
+    // Clear previous timeout si existant
     if (searchTimeOutRef.current) {
       clearTimeout(searchTimeOutRef.current);
     }
-    if (searchQuery.length >= 3) {  //modification ici
+    // Si la chaîne fait au moins 3 lettres, lance la recherche après un délai de 500ms
+    if (searchQuery.length >= 3) { 
       searchTimeOutRef.current = setTimeout(() => {
         searchProductsRealTime(text)
       },500); 
     } else {
+      // Sinon reset la recherche
       searchProductsRealTime("");
     }
   };
-
+  // Vide le champ de recherche et réinitialise les résultats
   const handleClearSearch = () => {
     setSearchQuery("");
     searchProductsRealTime("");
   }
-
+  // Rendu du header contenant le titre et champ de recherche
   const renderHeader = () => {
     return (
       <View style={styles.header}>
@@ -92,27 +99,34 @@ const SearchScreen = () => {
       </View>
     );
   };
-
+  // Rendu principal du composant
   return (
     <Wrapper>
       {renderHeader()}
       {loading ? (
+        // Affiche un spinner pendant le chargement
         <LoadingSpinner />
       ) : error ? (
+        // En cas d'erreur, affiche le message
         <View>
           <View style={styles.errorContainer}>
             <Text style={styles.errorText}>{error}</Text>
           </View>
         </View>
       ) : filteredProducts?.length === 0 && searchQuery ? (
+        // Si la recherche retourne rien, affiche un état vide personnalisé
         <EmptyState 
           type= "search"
           message= "Pas de produits correspondant"
         />
       ) : (
+        // Sinon affiche les produits dans une grille avec FlatList
         <FlatList 
+          // données filtrées par la recherche
           data={searchQuery ? filteredProducts : []}
+          // clé unique pour chaque produit
           keyExtractor={(item) => item.id.toString()}
+          // affichage en 2 colonnes
           numColumns={2}
           renderItem={({item}) => (
             <View style={styles.productContainer}>
@@ -124,9 +138,11 @@ const SearchScreen = () => {
           )}
           contentContainerStyle={styles.productsGrid}
           columnWrapperStyle={styles.columnWrapper}
+          // pied de liste
           ListFooterComponent={<View style={styles.footer} />}
           ListEmptyComponent={
             !searchQuery ? (
+              // Message d'invite si pas encore de recherche lancée
               <View style={styles.emptyStateContainer}>
                 <Text style={styles.emptyStateText}>Saisissez au moins 3 lettres afin de lancer la recherche</Text>
               </View>
