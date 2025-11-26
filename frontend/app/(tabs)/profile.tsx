@@ -98,6 +98,7 @@ const ProfileScreen = () => {
       title: "Paramètres",
       onPress: () => {
         // Action à définir pour les paramètres utilisateur
+        router.push("/(tabs)/profileEdit")
       },
     }
   ];

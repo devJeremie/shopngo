@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { 
     View, Text, 
-    TextInput, Button, 
+    TextInput,
     Alert, StyleSheet 
 } from "react-native";
 import { supabase } from "@/lib/supabase";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "expo-router";
 import { AppColors } from "@/constants/theme";
+import Button from "@/components/Button";
 
 
 
@@ -65,11 +66,37 @@ const ProfileScreen: React.FC = () => {
         }
     };
   return (
-    <View>
-      <Text>ProfileScreen</Text>
+    <View style={styles.container}>
+        <Text style={styles.label}>Nom complet</Text>
+        <TextInput
+            style={styles.input}
+            value={fullName}
+            onChangeText={setFullName}
+            placeholder="Votre nom complet"
+        />
+        <Text style={styles.label}>Adresse de livraison</Text>
+        <TextInput
+            style={styles.input}
+            value={deliveryAddress}
+            onChangeText={setDeliveryAddress}
+            placeholder="Votre adresse de livraison"
+        />
+        <Text style={styles.label}>Votre téléphone</Text>
+        <TextInput
+            style={styles.input}
+            value={phone}
+            onChangeText={setPhone}
+            placeholder="Votre numéro de téléphone"
+            keyboardType="phone-pad"
+        />
+        <Button
+            title={loading ? "Sauvegarde..." : "Sauvegarder le profil"}
+            onPress={saveProfile}
+            disabled={loading}
+        />
     </View>
-  )
-}
+  );
+};
 
 export default ProfileScreen
 
