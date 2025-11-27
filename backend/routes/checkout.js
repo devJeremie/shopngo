@@ -42,7 +42,7 @@ router.post("/checkout", async (req, res) => {
         },
         receipt_email: email,                    // email pour envoyer le reçu après paiement
         description: `Commande de ${email}`,     // description du paiement
-        metadata: {                              // // métadonnées personnalisées attachées au paiement
+        metadata: {                              // métadonnées personnalisées attachées au paiement
             email: email,
         }
     });
