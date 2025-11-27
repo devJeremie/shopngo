@@ -24,13 +24,13 @@ router.post("/checkout", async (req, res) => {
         const customer = await stripe.customers.create();
         // Création d'une clé éphémère pour le client, utile pour Stripe mobile SDKs
         const ephemeralKey = await stripe.ephemeralKeys.create(
-        {
-            customer: customer.id,
-        },
-        {   // version spécifique de l'API Stripe utilisée
-            apiVersion: "2025-09-30.clover"
-        }
-    );
+            {
+                customer: customer.id,
+            },
+            {   // version spécifique de l'API Stripe utilisée
+                apiVersion: "2025-09-30.clover"
+            }
+        );
     // Création d'un PaymentIntent avec les données fournies
     const paymentIntent = await stripe.paymentIntents.create({
         amount: amountInCents,
