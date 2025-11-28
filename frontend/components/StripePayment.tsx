@@ -33,17 +33,17 @@ const StripePayment = ({
 
   // Initialise le Payment Sheet Stripe avec les paramètres reçus du backend
     const initializePaymentSheet = async () => {
-    const { error } = await initPaymentSheet({
-      paymentIntentClientSecret: paymentIntent,
-      customerId: customer,
-      customerEphemeralKeySecret: ephemeralKey,
-      merchantDisplayName: 'Shopngo Store',   // Nom affiché dans le Payment Sheet
-      returnURL: returnURL,
-    });
-    if (error) {
-      throw new Error(`Échec de l’initialisation de la feuille de paiement: ${error}`);
-    }
-  };
+      const { error } = await initPaymentSheet({
+        paymentIntentClientSecret: paymentIntent,
+        customerId: customer,
+        customerEphemeralKeySecret: ephemeralKey,
+        merchantDisplayName: 'Shopngo Store',   // Nom affiché dans le Payment Sheet
+        returnURL: returnURL,
+      });
+      if (error) {
+        throw new Error(`Échec de l’initialisation de la feuille de paiement: ${error}`);
+      }
+    };
 
     // Met à jour le statut de paiement de la commande dans Supabase
     const updatePaymentStatus = async () =>{
