@@ -31,6 +31,7 @@ const StripePayment = ({
   // Génération de l'URL de retour pour le Payment Sheet (écran commandes)
   const returnURL = Linking.createURL("/(tabs)/orders");
   // Initialise le Payment Sheet Stripe avec les paramètres reçus du backend
+
   const initializePaymentSheet = async () => {
     const { error } = await initPaymentSheet({
       paymentIntentClientSecret: paymentIntent,
@@ -43,6 +44,7 @@ const StripePayment = ({
       throw new Error(`Échec de l’initialisation de la feuille de paiement: ${error}`);
     }
   };
+
     // Met à jour le statut de paiement de la commande dans Supabase
     const updatePaymentStatus = async () =>{
       const {error} =  await supabase
@@ -55,6 +57,7 @@ const StripePayment = ({
         throw new Error(`Échec de l’initialisation de la feuille de paiement: ${error}`);
       }
     };
+    
     // Fonction principale déclenchant le processus de paiement complet
     const handlePayment = async () => {
       try {
