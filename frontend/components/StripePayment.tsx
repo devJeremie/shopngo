@@ -30,9 +30,9 @@ const StripePayment = ({
   const router = useRouter();
   // Génération de l'URL de retour pour le Payment Sheet (écran commandes)
   const returnURL = Linking.createURL("/(tabs)/orders");
-  // Initialise le Payment Sheet Stripe avec les paramètres reçus du backend
 
-  const initializePaymentSheet = async () => {
+  // Initialise le Payment Sheet Stripe avec les paramètres reçus du backend
+    const initializePaymentSheet = async () => {
     const { error } = await initPaymentSheet({
       paymentIntentClientSecret: paymentIntent,
       customerId: customer,
@@ -57,7 +57,7 @@ const StripePayment = ({
         throw new Error(`Échec de l’initialisation de la feuille de paiement: ${error}`);
       }
     };
-    
+
     // Fonction principale déclenchant le processus de paiement complet
     const handlePayment = async () => {
       try {
