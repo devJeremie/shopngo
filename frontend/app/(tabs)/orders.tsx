@@ -17,7 +17,7 @@ import Animated,  {
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather } from '@expo/vector-icons';
 
-
+// Interface TypeScript pour typer une commande
 interface Order {
   id: number;
   total_price: number; 
@@ -29,9 +29,9 @@ interface Order {
     price: number;
     quantity: number;
     image: string;
-  }[];
+  }[]; // représente un tableau de ce type d'objets
 }
-
+// Composant modal qui affiche le détail d’une commande
  const OrderDetailsModal = ({
   visible,order,onClose
 }:{
@@ -39,24 +39,31 @@ interface Order {
   order:Order|null; 
   onClose: () => void;
 }) => {
+  // Valeurs animées pour l’animation d’apparition / disparition du modal
   const translateY = useSharedValue(300);
   const opacity = useSharedValue(0);
-  //Animate Modal open/close
+  // Gère l’animation du modal quand la prop `visible` change
   React.useEffect(() => {
     if (visible) {
+      // Fait remonter le modal avec un effet ressort
       translateY.value = withSpring(0, {damping: 15, stiffness: 100});
+      // Fait apparaître le contenu en fondu
       opacity.value = withTiming(1, {duration: 300});
     } else {
+      // Fait redescendre le modal en bas de l’écran
       translateY.value = withTiming(300, {duration: 200});
+      // Fait disparaître le contenu en fondu
       opacity.value = withTiming(0, {duration: 200});
     }
   }, [visible]);
 
+  // Style animé appliqué au container du modal
   const animatedModalStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value}],
     opacity: opacity.value,
   }));
 
+  // Si aucune commande sélectionnée, ne rien rendre
   if (!order) return null;
 
     return (
@@ -66,12 +73,16 @@ interface Order {
         visible={visible}
         onRequestClose={onClose}
       >
+        {/* Fond semi-transparent derrière le modal */}
         <View style={styles.modalOverlay}>
+          {/* Contenu du modal avec animation */}
           <Animated.View style={[styles.modalContent, animatedModalStyle]}>
+            {/* Fond en dégradé pour le modal */}
             <LinearGradient colors={
               [AppColors.primary[50], AppColors.primary[100]]}
               style={styles.modalGradient}
             >
+              {/* En-tête du modal : titre + bouton fermer */}
               <View style={styles.modalHeader}>
                 <Text style={styles.modalTitle}>COmmande #${order.id} Détails</Text>
                 <TouchableOpacity onPress={onClose}>
@@ -82,6 +93,7 @@ interface Order {
                     />
                 </TouchableOpacity>
               </View>
+              {/* Corps du modal : infos générales de la commande */}
               <View style={styles.modalBody}>
                 <Text style={styles.modalText}>
                   Total: ${order?.total_price.toFixed(2)}
@@ -96,6 +108,7 @@ interface Order {
                 <Text style={styles.modalText}>
                   Passée: {new Date(order.created_at).toLocaleDateString()}
                 </Text>
+                {/* Liste des articles de la commande */}
                 <Text style={styles.modalSectionTitle}>Articles: </Text>
                 <FlatList 
                   data={order.items}
@@ -106,6 +119,7 @@ interface Order {
                         source={{ uri: item?.image }}
                         style={styles.itemImage}
                       />
+                      {/* Détails de l’article */}
                       <View style={styles.itemDetails}>
                         <Text style={styles.itemsTitle}>{item.title}</Text>
                         <Text style={styles.itemText}>Prix: €{item.price.toFixed(2)}</Text>
@@ -118,6 +132,7 @@ interface Order {
                   showsVerticalScrollIndicator={false}
                 />
               </View>
+              {/* Bouton de fermeture du modal */}
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={onClose}
@@ -132,26 +147,32 @@ interface Order {
     )
   }
 
+// Écran principal listant les commandes de l’utilisateur
 const OrdersScreen = () => {
-  const { user } = useAuthStore();
+  const { user } = useAuthStore();                             // Récupère l’utilisateur connecté depuis le store global
   const router = useRouter();
-  const [ orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
+  const [ orders, setOrders] = useState<Order[]>([]);          // Liste des commandes de l’utilisateur
+  const [loading, setLoading] = useState(true);                // Indicateur de chargement
+  const [error, setError] = useState<string | null>(null);     // Message d’erreur éventuel
+  const [showModal, setShowModal] = useState(false);           // Contrôle la visibilité du modal de détails
+  const [refreshing, setRefreshing] = useState(false);         // Indicateur de rafraîchissement de la liste
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  // Commande sélectionnée pour le modal
 
+  // Récupère les commandes de l’utilisateur connecté depuis Supabase
   const fetchOrders = async () => {
     if (!user) {
+      // Si pas d’utilisateur, message d’erreur et on arrête
       setError("Connectez-vous pour voir vos commandes");
       setLoading(false);
       return;
     }
     try {
       setLoading(true)
+      // Récupère l’utilisateur depuis Supabase (optionnel si tu utilises déjà `user`)
       const {data: {user:supabaseUser },} = await supabase.auth.getUser();
       // console.log(supabaseUser?.email);
+      // Requête pour récupérer les commandes associées à l’email utilisateur
       const {data, error} = await supabase
         .from("orders")
         .select("id, total_price, payment_status, created_at, items, user_email")
@@ -159,30 +180,36 @@ const OrdersScreen = () => {
         .order("created_at", { ascending: false });
 
       if (error) {
+        // Si la requête échoue, on lève une erreur
         throw new Error(`Failed to fetch orders: ${error.message}`)
       }
+      // Met à jour l’état avec les commandes récupérées (ou tableau vide)
       setOrders(data || []);
     } catch (error: any) {
       console.error("Error fetching orders:", error);
+      // Stocke le message d’erreur pour affichage à l’écran
       setError(error.message || "Echec dans le chargement de vos commandes");
     } finally {
+      // Dans tous les cas, on stoppe l’indicateur de chargement
       setLoading(false);
     }
   };
   // console.log(orders);
   
+  // Quand l’écran prend le focus, on recharge la liste des commandes
   useFocusEffect(
     useCallback(() => {
       fetchOrders();
     }, [user, router])
   );
 
+  // Supprime une commande par son id
   const handleDeletOrder = async (orderId:number) => {
     try {
       if (!user) {
         throw new Error("User non connecté");
       }
-      //Verify the order exists
+      // Vérifie d’abord que la commande existe bien
       const { data: order, error: fetchError } = await supabase
         .from("orders")
         .select("id,user_email")
@@ -191,9 +218,9 @@ const OrdersScreen = () => {
 
         if (fetchError || !order) {
           throw new Error("Commmande non trouvée");
-        }
+        }Co
         
-        //Perform the deletion
+        // Supprime la commande dans la table `orders`
         const { error } = await supabase
           .from("orders")
           .delete()
@@ -202,7 +229,9 @@ const OrdersScreen = () => {
           if (error) {
             throw new Error(`Echec de suppression de commande:${error?.message}`);
           }
+          // Recharge la liste après suppression
           fetchOrders();
+          // Affiche une notification de succès
           Toast.show({
             type: "success",
             text1: "Commande supprimé",
@@ -212,16 +241,19 @@ const OrdersScreen = () => {
           });
     } catch (error) {
       console.error("Erreur dans la suppressin de commande:", error);
+      // Affiche une alerte en cas d’erreur
       Alert.alert("Error","Echec lors de la suppression, Réssayez encore.");
     }
   };
 
+  // Ouvre le modal pour afficher le détail d’une commande
   const handleViewDetails = (order:Order) => {
     setSelectedOrder(order);
     setShowModal(true);
   };
   // console.log(setSelectedOrder, setShowModal);
   
+  // Ferme le modal et réinitialise la commande sélectionnée
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedOrder(null);
@@ -230,7 +262,7 @@ const OrdersScreen = () => {
   if (loading) {
     return <Loader />
   }
-
+  // Si une erreur existe, on affiche un état d’erreur simple
   if(error) {
     return (
       <Wrapper>
