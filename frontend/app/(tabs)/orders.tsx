@@ -218,7 +218,7 @@ const OrdersScreen = () => {
 
         if (fetchError || !order) {
           throw new Error("Commmande non trouvée");
-        }Co
+        }
         
         // Supprime la commande dans la table `orders`
         const { error } = await supabase
