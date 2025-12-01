@@ -6,7 +6,7 @@ interface Props {
     title: string;
 }
 
-const TitleHeader = ({title}:Props) => {
+const TitleHeader = ({title}:Props) => {  //destructuring pour recuperer directement title
     return (
     <Text style={styles.title}>{title}</Text>
     )
