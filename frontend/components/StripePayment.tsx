@@ -49,7 +49,7 @@ const StripePayment = ({
     const updatePaymentStatus = async () =>{
       const {error} =  await supabase
         .from("orders")
-        .update({ payment_status: "payé" })    // Passage au statut payé
+        .update({ payment_status: "success" })    // Passage au statut payé
         .eq("id", orderId)
         .select();
 

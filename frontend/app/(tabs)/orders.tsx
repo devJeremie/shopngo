@@ -84,7 +84,7 @@ interface Order {
             >
               {/* En-tête du modal : titre + bouton fermer */}
               <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>COmmande #${order.id} Détails</Text>
+                <Text style={styles.modalTitle}>Commande #${order.id} Détails</Text>
                 <TouchableOpacity onPress={onClose}>
                   <Feather 
                     name= "x"

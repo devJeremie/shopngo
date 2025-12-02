@@ -29,7 +29,7 @@ interface Props {
 
 const OrderItem = ({order, onDelete, email, onViewDetails}: Props) => {
     // Vérifie si la commande est déjà payée (status exact "success")
-    const isPaid = order?.payment_status === "payé"; //Attention c'est ce qui est noté en BDD
+    const isPaid = order?.payment_status === "success"; //Attention c'est ce qui est noté en BDD
     // États pour le bouton de paiement 
     const [loading, setLoading] = useState(false);      // Affiche le spinner pendant l'API
     const [disable, setDisable] = useState(false);      // Désactive le bouton pendant le traitement
