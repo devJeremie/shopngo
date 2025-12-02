@@ -29,7 +29,7 @@ interface Props {
 
 const OrderItem = ({order, onDelete, email, onViewDetails}: Props) => {
     // Vérifie si la commande est déjà payée (status exact "success")
-    const isPaid = order?.payment_status === "success";
+    const isPaid = order?.payment_status === "payé"; //Attention c'est ce qui est noté en BDD
     // États pour le bouton de paiement 
     const [loading, setLoading] = useState(false);      // Affiche le spinner pendant l'API
     const [disable, setDisable] = useState(false);      // Désactive le bouton pendant le traitement
@@ -46,7 +46,7 @@ const OrderItem = ({order, onDelete, email, onViewDetails}: Props) => {
         };
         try {
             // Appel API vers le backend pour créer l'intention Stripe
-            const response = await axios.post(`${BASE_URL}/checkout`,
+            const response = await axios.post(`${BASE_URL}`,//peu etre ps besoin du checkout car il est dans la variable baseUrl
                 payload,{
                     headers: { "Content-Type": "application/json" },
                 });
