@@ -38,8 +38,9 @@ const DeliveryAdressScreen: React.FC = () => {
             //     // Résultat attendu : un seul objet (et non un tableau).
             //     .single();
             // // Fin du chargement.
+            
             //test avec user.email qui est la colonne d'association qu'on utilise dans la OrdersScreen donc 
-            //logiquement c'est cele ci qu'il faut utiliser ici aussi
+            //logiquement c'est celle ci qu'il faut utiliser ici aussi
             const { data, error } = await supabase
                 .from("orders")
                 .select('id')
