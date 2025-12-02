@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: "92%",
-    maxHeight: "85%",
+    maxHeight: "85%",  //peu etre, modifier si le bouton fermer n'apparait pas
     borderRadius: 16,
     overflow: "hidden",
   },
