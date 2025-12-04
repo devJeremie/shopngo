@@ -9,6 +9,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "expo-router";
 import { AppColors } from "@/constants/theme";
 import Button from "@/components/Button";
+import Toast from "react-native-toast-message";
 
 
 
@@ -46,7 +47,12 @@ const ProfileScreen: React.FC = () => {
 
     const saveProfile = async () => {
         if (!user) {
-        Alert.alert("Erreur", "Utilisateur non connecté");
+        Toast.show({
+            type: "error",
+            text1: "Erreur",
+            text2: "Utilisateur non connecté",
+            visibilityTime: 2000,
+        });
         return;
         }
         setLoading(true);
@@ -59,10 +65,20 @@ const ProfileScreen: React.FC = () => {
         });
         setLoading(false);
         if (error) {
-            Alert.alert("Erreur", "Impossible de sauvegarder le profil");
+            Toast.show({
+            type: "error",
+            text1: "Erreur",
+            text2: "Impossible de sauvegarder le profil",
+            visibilityTime: 2000,
+            });
         } else {
-            Alert.alert("Succès", "Profil mis à jour");
-        // Optionnel : router.back();
+           Toast.show({
+            type: "success",
+            text1: "Succès",
+            text2: "Profil mis à jour avec succès",
+            visibilityTime: 2000,
+           });
+           router.push('/(tabs)/profile'); //redirection vers la page profile après sauvegarde
         }
     };
   return (
