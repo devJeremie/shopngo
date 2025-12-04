@@ -83,28 +83,32 @@ const ProfileScreen: React.FC = () => {
     };
   return (
     <View style={styles.container}>
-        <Text style={styles.label}>Nom complet</Text>
-        <TextInput
-            style={styles.input}
-            value={fullName}
-            onChangeText={setFullName}
-            placeholder="Votre nom complet"
-        />
-        <Text style={styles.label}>Adresse de livraison</Text>
-        <TextInput
-            style={styles.input}
-            value={deliveryAddress}
-            onChangeText={setDeliveryAddress}
-            placeholder="Votre adresse de livraison"
-        />
-        <Text style={styles.label}>Votre téléphone</Text>
-        <TextInput
-            style={styles.input}
-            value={phone}
-            onChangeText={setPhone}
-            placeholder="Votre numéro de téléphone"
-            keyboardType="phone-pad"
-        />
+        {/* Formulaire */}
+        <View style={styles.formContainer}>
+            <Text style={styles.label}>Nom complet</Text>
+            <TextInput
+                style={styles.input}
+                value={fullName}
+                onChangeText={setFullName}
+                placeholder="Votre nom complet"
+            />
+            <Text style={styles.label}>Adresse de livraison</Text>
+            <TextInput
+                style={styles.input}
+                value={deliveryAddress}
+                onChangeText={setDeliveryAddress}
+                placeholder="Votre adresse de livraison"
+            />
+            <Text style={styles.label}>Votre téléphone</Text>
+            <TextInput
+                style={styles.input}
+                value={phone}
+                onChangeText={setPhone}
+                placeholder="Votre numéro de téléphone"
+                keyboardType="phone-pad"
+            />
+        </View>
+        {/* Bouton de sauvegarde */ }
         <Button
             title={loading ? "Sauvegarde..." : "Sauvegarder le profil"}
             onPress={saveProfile}
@@ -120,11 +124,16 @@ const styles = StyleSheet.create({
     container: { 
         flex: 1, 
         padding: 20, 
-        backgroundColor: AppColors.background.primary },
+        backgroundColor: AppColors.background.primary 
+    },
+    formContainer: {
+        flex: 1,
+    },
     label: { 
         marginTop: 15, 
         fontSize: 16, 
-        fontWeight: "bold" },
+        fontWeight: "bold" 
+    },
     input: {
         borderWidth: 1,
         borderColor: AppColors.gray[300],
