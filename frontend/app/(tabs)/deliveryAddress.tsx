@@ -26,19 +26,6 @@ const DeliveryAdressScreen: React.FC = () => {
             if (!user) return;
             // Démarrage du chargement pendant la requête.
             setLoading(true);
-            // Requête vers la table "orders" pour obtenir la dernière commande de l'utilisateur.
-            // const { data, error } = await supabase
-            //     .from("orders")
-            //     .select('id')
-            //     .eq("user_id", user.id)
-            //     // Trie par date de création décroissante.
-            //     .order("created_at", {ascending: false})
-            //     // On ne récupère qu'une seule commande.
-            //     .limit(1)
-            //     // Résultat attendu : un seul objet (et non un tableau).
-            //     .single();
-            // // Fin du chargement.
-            
             //test avec user.email qui est la colonne d'association qu'on utilise dans la OrdersScreen donc 
             //logiquement c'est celle ci qu'il faut utiliser ici aussi
             const { data, error } = await supabase
@@ -53,12 +40,17 @@ const DeliveryAdressScreen: React.FC = () => {
                 .single();
 
             setLoading(false);
+            console.log('🔍 Debug:', { data, error }); // ← Pour voir ce qui se passe
             // Gestion des erreurs ou mise à jour du state selon la réponse.
             if (error) {
+                console.log('❌ Error:', error);
                 Alert.alert("Erreur", "Impossible de récupérer votre commande");
             } else if (data) {
+                console.log('✅ OrderId:', data.id);
                 // On mémorise l'ID de la commande trouvée.
                 setOrderId(data.id);
+            }else {
+                console.log('ℹ️ Info: Aucune commande trouvée');
             }
         };
         // Appel immédiat au chargement du composant.
@@ -68,34 +60,43 @@ const DeliveryAdressScreen: React.FC = () => {
     const handleAddAddress = async () => {
         console.log('User:', user?.id, 'OrderId:', orderId); //verification
         
-        // Vérifie s'il y a bien une commande active pour cet utilisateur.
-        // if (!orderId) {
-        //     Alert.alert("Erreur", "Aucune commande trouvée pour l'ajout d'addresse");
-        //     return;
-        // }
-        if (!user?.email) {
-            Alert.alert("Erreur", "Utilisateur non connecté");
+        if (!user || !orderId) {
+            Alert.alert("Erreur", "Aucune commande récente trouvée pour l'ajout d'adresse");
             return;
         }
         // Vérifie que le champ adresse n'est pas vide ou composé uniquement d'espaces.
         if (!address.trim()) {
-            Alert.alert("Validation", "l'adresse ne peut pas être vide");
+            Alert.alert("Validation", "L'adresse ne peut pas être vide");
             return;
         }
         // Indicateur de chargement activé.
         setLoading(true);
         // Mise à jour de toutes les commandes avec la nouvelle adresse de livraison.
-        const {error} = await supabase
+        // const {error} = await supabase
+        //     .from("orders")
+        //     .update({delivery_address: address})
+        //     .eq("user_email", user.email);
+        // // Chargement terminé.
+        // setLoading(false);
+        // // Gestion de la réponse de la base de données.
+        // if (error) {
+        //     Alert.alert("Erreur", "Impossible d'ajouter l'adresse");
+        // } else {
+        //     Alert.alert("Succés", "Adresse ajouté avec succés");
+        //     // Retour à la page précédente.
+        //     router.back();
+        // }
+        const { error } = await supabase
             .from("orders")
-            .update({delivery_address: address})
-            .eq("user_email", user.email);
-        // Chargement terminé.
+            .update({ delivery_address: address })
+            .eq("id", orderId); //uniquement cette commande
+
         setLoading(false);
-        // Gestion de la réponse de la base de données.
+
         if (error) {
-            Alert.alert("Erreur", "Impossible d'ajouter l'adresse");
+            Alert.alert("Erreur", "Impossible de modifier l'adresse");
         } else {
-            Alert.alert("Succés", "Adresse ajouté avec succés");
+            Alert.alert("Succès", "Adresse modifiée avec succès");
             // Retour à la page précédente.
             router.back();
         }

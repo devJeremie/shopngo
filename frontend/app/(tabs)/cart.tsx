@@ -55,6 +55,31 @@ const handlePlaceOrder = async () => {
   try {
     // indique le chargement
     setLoading(true);
+
+    //Récupérer l'adresse de livraison depuis le profil utilisateur
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select('"delivery_address"') //force le nom de la colonne avec des guillemets doubles
+      // (facultatif mai sca permet de vous le montrer ca mrche sans dans notre cas)
+      .eq("id", user.id)
+      .single();
+
+      //Gestion du cas profil non trouvé
+      if (profileError && profileError.code !== "PGRST116") { 
+        Toast.show({
+          type: "error",
+          text1: "Erreur",
+          text2: "Impossible de récupérer l'adresse de livraison",
+          position: "bottom",
+          visibilityTime: 2000,
+        });
+        setLoading(false);
+        return;
+      }
+        
+    const deliveryAddress = profile?.delivery_address || "";
+      
+
      // Préparation des données de commande pour insertion dans Supabase
     const orderData = {
       user_email:user.email,
@@ -67,6 +92,7 @@ const handlePlaceOrder = async () => {
         image:item.product.image,
       })),
       payment_status: "En attente",
+      delivery_address: deliveryAddress, // Adresse de livraison depuis le profil
     };
     // Insertion de la commande dans la table "orders" de Supabase
     const {data,error}=await supabase

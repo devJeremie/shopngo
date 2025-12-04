@@ -23,6 +23,7 @@ interface Order {
   total_price: number; 
   payment_status: string;
   created_at: string;
+  delivery_address?: string; //ajout de l'adresse de livraison
   items: {
     product_id: number;
     title: string;
@@ -33,7 +34,7 @@ interface Order {
 }
 // Composant modal qui affiche le détail d’une commande
  const OrderDetailsModal = ({
-  visible,order,onClose
+  visible,order,onClose, 
 }:{
   visible:boolean; 
   order:Order|null; 
@@ -99,7 +100,7 @@ interface Order {
                   Total: ${order?.total_price.toFixed(2)}
                 </Text>
                 <Text style={styles.modalText}>
-                  Status: {" "}
+                  Statut: {" "}
                   {order.payment_status === "success"
                     ? "Paiement effectué"
                     : "En attente"
@@ -107,6 +108,10 @@ interface Order {
                 </Text>
                 <Text style={styles.modalText}>
                   Passée: {new Date(order.created_at).toLocaleDateString()}
+                </Text>
+                {/*Adresse de livraison de la commande*/}
+                <Text style={styles.modalText}>
+                  Adresse: {order.delivery_address || "Non spécifiée"}  
                 </Text>
                 {/* Liste des articles de la commande */}
                 <Text style={styles.modalSectionTitle}>Articles: </Text>
@@ -175,7 +180,7 @@ const OrdersScreen = () => {
       // Requête pour récupérer les commandes associées à l’email utilisateur
       const {data, error} = await supabase
         .from("orders")
-        .select("id, total_price, payment_status, created_at, items, user_email")
+        .select("id, total_price, payment_status, created_at, items, user_email, delivery_address")
         .eq("user_email",user.email)
         .order("created_at", { ascending: false });
 
@@ -184,7 +189,7 @@ const OrdersScreen = () => {
         throw new Error(`Failed to fetch orders: ${error.message}`)
       }
       // Met à jour l’état avec les commandes récupérées (ou tableau vide)
-      setOrders(data || []);
+      setOrders(data ?? []);
     } catch (error: any) {
       console.error("Error fetching orders:", error);
       // Stocke le message d’erreur pour affichage à l’écran
@@ -363,7 +368,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: "92%",
-    maxHeight: "85%",  //peu etre, modifier si le bouton fermer n'apparait pas
+    // maxHeight: "85%",  //peu etre, modifier si le bouton fermer n'apparait pas
     borderRadius: 16,
     overflow: "hidden",
   },
