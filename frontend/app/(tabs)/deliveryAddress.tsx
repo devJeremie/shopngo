@@ -47,11 +47,8 @@ const DeliveryAdressScreen: React.FC = () => {
         } else {
             Alert.alert("Succès", "Adresse modifiée avec succès");
             // Retour à la page précédente.
-            // router.push({
-            //     pathname: "/(tabs)/payment",
-            //     params: {orderId}
-            // })
-            router.back();
+            // router.back();
+            router.push('/(tabs)/orders');
         }
     };
 // Interface utilisateur avec champ de saisie et bouton d'action.
