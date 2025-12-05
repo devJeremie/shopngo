@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { AppColors } from '@/constants/theme';
 import Button from '@/components/Button';
@@ -39,6 +39,17 @@ const PaymentScreen = () => {
         <Text style={styles.subtitle}>
             Veuillez confirmer vos informations de paiement pour finaliser la commande
         </Text>
+        {/*Ajout de la modification d'adresse ici directement */}
+        <TouchableOpacity
+            style={styles.addressButton}
+            onPress={() => router.push({
+                pathname: "/(tabs)/deliveryAddress",
+                params: {orderId: getStringParam(orderId)}
+            })}
+            activeOpacity={0.7}
+        >
+            <Text style={styles.addressButtonText}>Modifier l'adresse de livraison</Text>
+        </TouchableOpacity>
         <Text style={styles.totalPrice}>Total: €{totalValue.toFixed(2)}</Text>
         {/* Bouton de déclenchement du paiement Stripe */}
         <Button 
@@ -84,4 +95,19 @@ const styles = StyleSheet.create({
     button: {
         marginTop: 20,
     },
+    addressButton: {
+    backgroundColor: AppColors.primary[50],
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: AppColors.primary[200],
+  },
+  addressButtonText: {
+    fontFamily: "Inter-Medium",
+    fontSize: 16,
+    color: AppColors.primary[600],
+  },
 });

@@ -2,7 +2,7 @@ import { Alert, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { AppColors } from '@/constants/theme'
 import { useAuthStore } from '@/store/authStore'
-import { useRouter } from 'expo-router'
+import { useRouter, useLocalSearchParams } from 'expo-router'
 import { supabase } from '@/lib/supabase'
 import Button from '@/components/Button'
 // Composant React Native pour gérer l'ajout d'une adresse de livraison à une commande existante.
@@ -17,45 +17,8 @@ const DeliveryAdressScreen: React.FC = () => {
     // - orderId : l'identifiant de la dernière commande de l'utilisateur
     const [address, setAdress] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
-    const [orderId, setOrderId] = useState<string | null>(null);
-    // useEffect exécuté au montage du composant ou chaque fois que 'user' change.
-    // Il récupère la dernière commande de l'utilisateur connecté.
-    useEffect(() => {
-        const fetchLastOrder = async () => {
-            // Si aucun utilisateur n'est connecté, on quitte la fonction.
-            if (!user) return;
-            // Démarrage du chargement pendant la requête.
-            setLoading(true);
-            //test avec user.email qui est la colonne d'association qu'on utilise dans la OrdersScreen donc 
-            //logiquement c'est celle ci qu'il faut utiliser ici aussi
-            const { data, error } = await supabase
-                .from("orders")
-                .select('id')
-                .eq("user_email", user.email)
-                // Trie par date de création décroissante.
-                .order("created_at", {ascending: false})
-                // On ne récupère qu'une seule commande.
-                .limit(1)
-                // Résultat attendu : un seul objet (et non un tableau).
-                .single();
-
-            setLoading(false);
-            console.log('🔍 Debug:', { data, error }); // ← Pour voir ce qui se passe
-            // Gestion des erreurs ou mise à jour du state selon la réponse.
-            if (error) {
-                console.log('❌ Error:', error);
-                Alert.alert("Erreur", "Impossible de récupérer votre commande");
-            } else if (data) {
-                console.log('✅ OrderId:', data.id);
-                // On mémorise l'ID de la commande trouvée.
-                setOrderId(data.id);
-            }else {
-                console.log('ℹ️ Info: Aucune commande trouvée');
-            }
-        };
-        // Appel immédiat au chargement du composant.
-        fetchLastOrder();
-    }, [user]);
+    const { orderId } = useLocalSearchParams();
+   
     // Fonction déclenchée lors du clic sur le bouton "Ajouter l'adresse".
     const handleAddAddress = async () => {
         console.log('User:', user?.id, 'OrderId:', orderId); //verification
@@ -71,25 +34,11 @@ const DeliveryAdressScreen: React.FC = () => {
         }
         // Indicateur de chargement activé.
         setLoading(true);
-        // Mise à jour de toutes les commandes avec la nouvelle adresse de livraison.
-        // const {error} = await supabase
-        //     .from("orders")
-        //     .update({delivery_address: address})
-        //     .eq("user_email", user.email);
-        // // Chargement terminé.
-        // setLoading(false);
-        // // Gestion de la réponse de la base de données.
-        // if (error) {
-        //     Alert.alert("Erreur", "Impossible d'ajouter l'adresse");
-        // } else {
-        //     Alert.alert("Succés", "Adresse ajouté avec succés");
-        //     // Retour à la page précédente.
-        //     router.back();
-        // }
+        // Mise à jour de l'adresse de livraison dans la table "orders" pour la commande spécifiée.
         const { error } = await supabase
             .from("orders")
             .update({ delivery_address: address })
-            .eq("id", orderId); //uniquement cette commande
+            .eq("id", orderId); //Modifie uniquement la commande en cours
 
         setLoading(false);
 
@@ -98,6 +47,10 @@ const DeliveryAdressScreen: React.FC = () => {
         } else {
             Alert.alert("Succès", "Adresse modifiée avec succès");
             // Retour à la page précédente.
+            // router.push({
+            //     pathname: "/(tabs)/payment",
+            //     params: {orderId}
+            // })
             router.back();
         }
     };

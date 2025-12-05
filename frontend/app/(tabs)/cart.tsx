@@ -59,8 +59,7 @@ const handlePlaceOrder = async () => {
     //Récupérer l'adresse de livraison depuis le profil utilisateur
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
-      .select('"delivery_address"') //force le nom de la colonne avec des guillemets doubles
-      // (facultatif mai sca permet de vous le montrer ca mrche sans dans notre cas)
+      .select('"delivery_address"') //force le nom de la colonne avec des guillemets doubles(facultatif mai sca permet de vous le montrer ca mrche sans dans notre cas)
       .eq("id", user.id)
       .single();
 
