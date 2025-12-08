@@ -12,16 +12,17 @@ import Button from "@/components/Button";
 import Toast from "react-native-toast-message";
 
 
-
+// Écran de profil utilisateur
 const ProfileScreen: React.FC = () => {
     const { user } = useAuthStore();
     const router = useRouter();
-
+    
+    // États du formulaire
     const [fullName, setFullName] = useState("");
     const [deliveryAddress, setDeliveryAddress] = useState("");
     const [phone, setPhone] = useState("");
     const [loading, setLoading] = useState(false);
-
+    // Chargement des informations du profil depuis Supabase lorsqu'un utilisateur est connecté
     useEffect(() => {
         if (!user) return;
         const fetchProfile = async () => {
@@ -33,10 +34,11 @@ const ProfileScreen: React.FC = () => {
                 .single();
 
             setLoading(false);
-            
+            // Si une erreur autre que "aucune ligne trouvée" survient
             if (error && error.code !== "PGRST116") { // ignore no row error
                 Alert.alert("Erreur", "Impossible de charger le profil");
             } else if (data) {
+                // Mise à jour des champs avec les données récupérées
                 setFullName(data.full_name || "");
                 setDeliveryAddress(data.delivery_address || "");
                 setPhone(data.phone || "");
@@ -44,10 +46,11 @@ const ProfileScreen: React.FC = () => {
         };
         fetchProfile();
     }, [user]);
-
+    // Fonction pour sauvegarder ou mettre à jour le profil dans Supabase
     const saveProfile = async () => {
         if (!user) {
         Toast.show({
+            // Cas où aucun utilisateur n’est connecté
             type: "error",
             text1: "Erreur",
             text2: "Utilisateur non connecté",
@@ -56,6 +59,7 @@ const ProfileScreen: React.FC = () => {
         return;
         }
         setLoading(true);
+        // Envoi ou mise à jour des données dans la table "profiles"
         const { error } = await supabase.from("profiles").upsert({
             id: user.id,
             full_name: fullName,
@@ -64,6 +68,7 @@ const ProfileScreen: React.FC = () => {
             updated_at: new Date().toISOString(),
         });
         setLoading(false);
+        // Gestion des retours d’erreur ou succès
         if (error) {
             Toast.show({
             type: "error",
@@ -78,10 +83,12 @@ const ProfileScreen: React.FC = () => {
             text2: "Profil mis à jour avec succès",
             visibilityTime: 2000,
            });
+           // Redirection vers l’onglet profil après sauvegarde
            router.push('/(tabs)/profile'); //redirection vers la page profile après sauvegarde
         }
     };
   return (
+    // Interface utilisateur du composant
     <View style={styles.container}>
         {/* Formulaire */}
         <View style={styles.formContainer}>
@@ -108,7 +115,7 @@ const ProfileScreen: React.FC = () => {
                 keyboardType="phone-pad"
             />
         </View>
-        {/* Bouton de sauvegarde */ }
+         {/* Bouton pour sauvegarder les modifications */}
         <Button
             title={loading ? "Sauvegarde..." : "Sauvegarder le profil"}
             onPress={saveProfile}
