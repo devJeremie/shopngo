@@ -1,5 +1,6 @@
 // Importation du client Supabase préconfiguré
-import { supabase } from '@/lib/supabase';
+// import { supabase } from '@/lib/supabase';
+import { supabase } from '../lib/supabase'; //version pour les tests unitaires car jest ne connait pas @
 
 // Importation de la fonction 'create' de Zustand pour la gestion d'état globale
 import { create } from 'zustand';
